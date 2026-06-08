@@ -1,0 +1,29 @@
+---
+import { site } from '@/data/site';
+---
+
+<section class="section contact-section glass-panel" id="contact" aria-labelledby="contact-title" data-reveal>
+  <div class="contact-content">
+    <span class="section-number">04</span>
+    <h2 id="contact-title">Let's build<br />something reliable.</h2>
+    <p>I am open to data engineering roles, practical infrastructure work, and thoughtful collaborations.</p>
+    <a class="email-link glass-frame" href={`mailto:${site.email}`}>
+      <span>{site.email}</span><span aria-hidden="true">→</span>
+    </a>
+    <div class="contact-socials">
+      {site.social.map((item) => (
+        <a href={item.href} target="_blank" rel="noreferrer">{item.label} <span aria-hidden="true">↗</span></a>
+      ))}
+    </div>
+    <p class="contact-location">◎ {site.location} · {site.timezone}</p>
+  </div>
+  <div class="contact-refraction" aria-hidden="true"></div>
+</section>
+
+<footer class="site-footer">
+  <div>
+    <p>{site.name}</p>
+    <span>Built with Astro · Deployed on Cloudflare</span>
+  </div>
+  <a href="#top">Back to top ↑</a>
+</footer>
