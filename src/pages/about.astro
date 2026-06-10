@@ -1,0 +1,19 @@
+---
+import AboutTabs from '@/components/AboutTabs.astro';
+import PageShell from '@/components/PageShell.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { site } from '@/data/site';
+---
+
+<BaseLayout title={`About - ${site.name}`}>
+  <PageShell active="about">
+    <main class="about-screen" id="main">
+      <header class="about-header">
+        <h1>{site.role}</h1>
+        <div class="rule-title" aria-hidden="true"><span>///</span><i></i><span>\\\</span></div>
+        <p>building reliable data systems end-to-end</p>
+      </header>
+      <AboutTabs />
+    </main>
+  </PageShell>
+</BaseLayout>

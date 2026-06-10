@@ -83,3 +83,22 @@ export const capabilities: CapabilityGroup[] = [
   { title: 'Platforms', items: ['Airflow', 'Kubernetes', 'Docker', 'Terraform'] },
   { title: 'Systems', items: ['PostgreSQL', 'Kafka', 'Elasticsearch', 'CI/CD'] },
 ];
+
+export const education = {
+  degree: 'Master in Information Systems',
+  school: 'Admiral Makarov State University',
+  period: '2018 - 2022',
+} as const;
+
+export const interests = [
+  'MMA',
+  'NBA',
+  'Swimming',
+  'Rollerblading',
+  'Electronic music',
+  'Coffee',
+  'Books',
+  'Films',
+  'Photography',
+  'Digital minimalism',
+] as const;

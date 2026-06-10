@@ -1,20 +1,14 @@
 ---
-import AboutWork from '@/components/AboutWork.astro';
-import Contact from '@/components/Contact.astro';
-import Experience from '@/components/Experience.astro';
-import Header from '@/components/Header.astro';
-import Hero from '@/components/Hero.astro';
+import PageShell from '@/components/PageShell.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { site } from '@/data/site';
 ---
 
 <BaseLayout>
-  <div class="page-shell">
-    <Header />
-    <main id="main">
-      <Hero />
-      <AboutWork />
-      <Experience />
-      <Contact />
+  <PageShell active="index">
+    <main class="index-screen" id="main">
+      <h1>Hi, It’s Dmitrii</h1>
+      <p><span aria-hidden="true">//</span> {site.role}</p>
     </main>
-  </div>
+  </PageShell>
 </BaseLayout>

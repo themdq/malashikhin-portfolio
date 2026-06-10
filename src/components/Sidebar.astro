@@ -1,0 +1,40 @@
+---
+import { site } from '@/data/site';
+
+interface Props {
+  active: 'index' | 'about' | 'contacts';
+}
+
+const { active } = Astro.props;
+const nav = [
+  { key: 'index', label: 'Index', href: '/' },
+  { key: 'about', label: 'About', href: '/about/' },
+  { key: 'contacts', label: 'Contacts', href: '/contacts/' },
+] as const;
+---
+
+<aside class="sidebar" id="top">
+  <a class="sidebar-brand" href="/" aria-label={`${site.name}, home`}>d@malashikh.in ~</a>
+  <nav class="sidebar-nav" aria-label="Primary navigation">
+    {nav.map((item) => (
+      <a class:list={{ 'is-active': active === item.key }} href={item.href} aria-current={active === item.key ? 'page' : undefined}>
+        {item.label}
+      </a>
+    ))}
+    <span class="nav-disabled" aria-disabled="true">/*Projects*/</span>
+    <span class="nav-disabled" aria-disabled="true">/*Articles*/</span>
+    <a href={site.resume} target="_blank">Resume</a>
+  </nav>
+  <span class="sidebar-prompt" aria-hidden="true">&gt;_</span>
+</aside>
+
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <a class="mobile-brand" href="/">d@malashikh.in ~</a>
+  <div>
+    {nav.map((item) => (
+      <a class:list={{ 'is-active': active === item.key }} href={item.href} aria-current={active === item.key ? 'page' : undefined}>
+        {item.label}
+      </a>
+    ))}
+  </div>
+</nav>

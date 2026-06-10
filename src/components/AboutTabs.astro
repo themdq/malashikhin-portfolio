@@ -1,0 +1,115 @@
+---
+import { capabilities, education, experience, interests, site } from '@/data/site';
+
+const tabs = [
+  { id: 'background', label: 'Background' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'education', label: 'Education' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'interests', label: 'Interests' },
+] as const;
+---
+
+<div class="about-tabs" data-tabs>
+  <div class="tab-list" role="tablist" aria-label="About Dmitrii">
+    {tabs.map((tab, index) => (
+      <button
+        id={`tab-${tab.id}`}
+        class:list={{ 'is-active': index === 0 }}
+        type="button"
+        role="tab"
+        aria-selected={index === 0 ? 'true' : 'false'}
+        aria-controls={`panel-${tab.id}`}
+        tabindex={index === 0 ? 0 : -1}
+        data-tab={tab.id}
+      >
+        {tab.label}
+      </button>
+    ))}
+  </div>
+
+  <section class="tab-panel prose-panel" id="panel-background" role="tabpanel" aria-labelledby="tab-background" data-panel="background">
+    <p>
+      I’m Dmitrii Malashikhin, a data and pipeline engineer based in {site.location}. I build and operate data
+      integrations end-to-end, from researching sources and writing Python connectors to designing ETL pipelines,
+      enrichment, validation, and production support.
+    </p>
+    <p>
+      Most recently, I owned vulnerability data feeds for a cybersecurity product and improved the automation,
+      developer tooling, CI/CD, and data-quality workflows around them. I prefer pragmatic systems that are easy to
+      understand, test, and keep reliable.
+    </p>
+    <p>
+      Outside work, I follow combat sports and basketball, swim, rollerblade, listen to electronic music, and enjoy
+      books, films, photography, good coffee, and simplifying everyday routines through automation.
+    </p>
+  </section>
+
+  <section class="tab-panel experience-panel" id="panel-experience" role="tabpanel" aria-labelledby="tab-experience" data-panel="experience" hidden>
+    {experience.map((item) => (
+      <article class="experience-item">
+        <div class="experience-heading">
+          <div><strong>{item.role}</strong><span>{item.company}</span></div>
+          <time>{item.period}</time>
+        </div>
+        <p>{item.summary}</p>
+      </article>
+    ))}
+  </section>
+
+  <section class="tab-panel education-panel" id="panel-education" role="tabpanel" aria-labelledby="tab-education" data-panel="education" hidden>
+    <article>
+      <h2>{education.degree}</h2>
+      <p>{education.school} <span>//</span> {education.period}</p>
+    </article>
+  </section>
+
+  <section class="tab-panel skills-panel" id="panel-skills" role="tabpanel" aria-labelledby="tab-skills" data-panel="skills" hidden>
+    {capabilities.map((group) => (
+      <article>
+        <h2>{group.title}</h2>
+        <p>{group.items.join(' / ')}</p>
+      </article>
+    ))}
+  </section>
+
+  <section class="tab-panel interests-panel" id="panel-interests" role="tabpanel" aria-labelledby="tab-interests" data-panel="interests" hidden>
+    {interests.map((item) => <span>{item}</span>)}
+  </section>
+</div>
+
+<script>
+  const tabRoot = document.querySelector('[data-tabs]');
+  const tabButtons = Array.from(tabRoot?.querySelectorAll<HTMLButtonElement>('[role="tab"]') ?? []);
+  const panels = Array.from(tabRoot?.querySelectorAll<HTMLElement>('[role="tabpanel"]') ?? []);
+
+  const activateTab = (id: string | undefined, updateHash = true) => {
+    if (!tabButtons.some((button) => button.dataset.tab === id)) id = 'background';
+    tabButtons.forEach((button) => {
+      const active = button.dataset.tab === id;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-selected', String(active));
+      button.tabIndex = active ? 0 : -1;
+    });
+    panels.forEach((panel) => { panel.hidden = panel.dataset.panel !== id; });
+    if (updateHash) history.replaceState(null, '', `#${id}`);
+  };
+
+  tabButtons.forEach((button, index) => {
+    button.addEventListener('click', () => activateTab(button.dataset.tab));
+    button.addEventListener('keydown', (event) => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      let next = index;
+      if (event.key === 'ArrowLeft') next = (index - 1 + tabButtons.length) % tabButtons.length;
+      if (event.key === 'ArrowRight') next = (index + 1) % tabButtons.length;
+      if (event.key === 'Home') next = 0;
+      if (event.key === 'End') next = tabButtons.length - 1;
+      tabButtons[next].focus();
+      activateTab(tabButtons[next].dataset.tab);
+    });
+  });
+
+  activateTab(location.hash.slice(1) || 'background', false);
+  addEventListener('hashchange', () => activateTab(location.hash.slice(1), false));
+</script>

@@ -1,0 +1,16 @@
+---
+import Sidebar from '@/components/Sidebar.astro';
+import ThemeToggle from '@/components/ThemeToggle.astro';
+
+interface Props {
+  active: 'index' | 'about' | 'contacts';
+}
+
+const { active } = Astro.props;
+---
+
+<div class="page-shell">
+  <Sidebar active={active} />
+  <ThemeToggle />
+  <slot />
+</div>

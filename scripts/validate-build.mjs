@@ -2,29 +2,24 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const dist = new URL('../dist/', import.meta.url);
-const htmlPath = new URL('index.html', dist);
-
-if (!existsSync(htmlPath)) {
-  throw new Error('dist/index.html is missing. Run pnpm build first.');
-}
-
-const html = readFileSync(htmlPath, 'utf8');
-const requiredIds = ['main', 'top', 'about', 'work', 'experience', 'contact'];
-const requiredText = [
-  'Dmitrii Malashikhin',
-  'Selected work',
-  'Experience',
-  'Capabilities',
-  'hello@malashikh.in',
+const pages = [
+  { path: 'index.html', text: ['Hi, It’s Dmitrii', 'Data Engineer'] },
+  { path: 'about/index.html', text: ['Background', 'Experience', 'Master in Information Systems'] },
+  { path: 'contacts/index.html', text: ['Contacts', 'malashikh.in'] },
 ];
 
-for (const id of requiredIds) {
-  if (!html.includes(`id="${id}"`)) throw new Error(`Missing section id: ${id}`);
-}
+const rendered = pages.map((page) => {
+  const htmlPath = new URL(page.path, dist);
+  if (!existsSync(htmlPath)) throw new Error(`dist/${page.path} is missing. Run pnpm build first.`);
+  const html = readFileSync(htmlPath, 'utf8');
+  if (!html.includes('id="main"') || !html.includes('id="top"')) throw new Error(`Missing shell landmarks: ${page.path}`);
+  for (const text of page.text) {
+    if (!html.includes(text)) throw new Error(`Missing rendered content in ${page.path}: ${text}`);
+  }
+  return html;
+});
 
-for (const text of requiredText) {
-  if (!html.includes(text)) throw new Error(`Missing rendered content: ${text}`);
-}
+const html = rendered.join('\n');
 
 const localAssets = [...html.matchAll(/(?:href|src)="(\/[^"]+)"/g)]
   .map((match) => match[1].split('#')[0])
@@ -38,4 +33,4 @@ for (const file of ['_headers', '_redirects', 'Dmitrii_Malashikhin_Data_Engineer
   if (!existsSync(new URL(file, dist))) throw new Error(`Missing deployment artifact: ${file}`);
 }
 
-console.log(`Validated ${requiredIds.length} sections and ${localAssets.length} local asset references.`);
+console.log(`Validated ${pages.length} routes and ${localAssets.length} local asset references.`);
