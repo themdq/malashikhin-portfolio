@@ -36,7 +36,7 @@ const personSchema = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#fbf8ee" />
+    <meta name="theme-color" content="#fffcf0" />
     <meta name="color-scheme" content="light dark" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -71,7 +71,7 @@ const personSchema = {
         root.dataset.theme = theme;
         document.querySelector('meta[name="theme-color"]')?.setAttribute(
           'content',
-          theme === 'dark' ? '#16130f' : '#fbf8ee',
+          theme === 'dark' ? '#100f0f' : '#fffcf0',
         );
         if (themeLabel) themeLabel.textContent = theme === 'dark' ? 'Use light theme' : 'Use dark theme';
       };
