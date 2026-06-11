@@ -30,7 +30,7 @@
   --serif: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
   --mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
   --rail-left: clamp(28px, 1.55vw, 32px);
-  --rail-width: clamp(248px, 13vw, 264px);
+  --rail-width: clamp(224px, 12vw, 240px);
 }
 
 :root[data-theme='dark'] {
@@ -108,7 +108,7 @@ button { font: inherit; }
   display: flex;
   width: var(--rail-width);
   flex-direction: column;
-  padding: 36px 40px 30px;
+  padding: 36px 32px 30px;
   border: 1px solid var(--orange);
   border-radius: 38px;
   background: linear-gradient(180deg, var(--orange-deep), var(--orange) 49%, var(--orange-deep));
