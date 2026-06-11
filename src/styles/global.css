@@ -1,4 +1,20 @@
 @font-face {
+  font-family: 'Instrument Serif';
+  src: url('/fonts/InstrumentSerif-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Instrument Serif';
+  src: url('/fonts/InstrumentSerif-Italic.ttf') format('truetype');
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'JetBrains Mono';
   src: url('/fonts/JetBrainsMono-Regular.ttf') format('truetype');
   font-style: normal;
@@ -32,7 +48,7 @@
   --glass-border: rgba(255, 255, 255, .82);
   --glass-highlight: rgba(255, 255, 255, .72);
   --glass-shadow: rgba(84, 66, 44, .16);
-  --serif: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  --serif: 'Instrument Serif', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
   --mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
   --rail-left: clamp(28px, 1.55vw, 32px);
   --rail-width: clamp(224px, 12vw, 240px);
