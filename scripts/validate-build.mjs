@@ -3,9 +3,10 @@ import { join } from 'node:path';
 
 const dist = new URL('../dist/', import.meta.url);
 const pages = [
-  { path: 'index.html', text: ['Hi, It’s Dmitrii', 'Data Engineer'] },
-  { path: 'about/index.html', text: ['Background', 'Experience', 'Master in Information Systems'] },
-  { path: 'contacts/index.html', text: ['Contacts', 'malashikh.in'] },
+  {
+    path: 'index.html',
+    text: ['Hi, It’s Dmitrii', 'Background', 'Experience', 'Master in Information Systems', 'Contacts', 'malashikh.in'],
+  },
 ];
 
 const rendered = pages.map((page) => {
@@ -33,4 +34,4 @@ for (const file of ['_headers', '_redirects', 'Dmitrii_Malashikhin_Data_Engineer
   if (!existsSync(new URL(file, dist))) throw new Error(`Missing deployment artifact: ${file}`);
 }
 
-console.log(`Validated ${pages.length} routes and ${localAssets.length} local asset references.`);
+console.log(`Validated the single-page build and ${localAssets.length} local asset references.`);

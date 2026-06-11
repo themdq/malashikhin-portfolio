@@ -1,23 +1,18 @@
 ---
 import { site } from '@/data/site';
 
-interface Props {
-  active: 'index' | 'about' | 'contacts';
-}
-
-const { active } = Astro.props;
 const nav = [
-  { key: 'index', label: 'Index', href: '/' },
-  { key: 'about', label: 'About', href: '/about/' },
-  { key: 'contacts', label: 'Contacts', href: '/contacts/' },
+  { key: 'index', label: 'Index', href: '#index' },
+  { key: 'about', label: 'About', href: '#about' },
+  { key: 'contacts', label: 'Contacts', href: '#contacts' },
 ] as const;
 ---
 
 <aside class="sidebar" id="top">
-  <a class="sidebar-brand" href="/" aria-label={`${site.name}, home`}>d@malashikh.in ~</a>
+  <a class="sidebar-brand" href="#index" aria-label={`${site.name}, home`}>d@malashikh.in ~</a>
   <nav class="sidebar-nav" aria-label="Primary navigation">
     {nav.map((item) => (
-      <a class:list={{ 'is-active': active === item.key }} href={item.href} aria-current={active === item.key ? 'page' : undefined}>
+      <a class:list={{ 'is-active': item.key === 'index' }} href={item.href} data-section-link={item.key}>
         {item.label}
       </a>
     ))}
@@ -29,10 +24,10 @@ const nav = [
 </aside>
 
 <nav class="mobile-nav" aria-label="Mobile navigation">
-  <a class="mobile-brand" href="/">d@malashikh.in ~</a>
+  <a class="mobile-brand" href="#index">d@malashikh.in ~</a>
   <div>
     {nav.map((item) => (
-      <a class:list={{ 'is-active': active === item.key }} href={item.href} aria-current={active === item.key ? 'page' : undefined}>
+      <a class:list={{ 'is-active': item.key === 'index' }} href={item.href} data-section-link={item.key}>
         {item.label}
       </a>
     ))}

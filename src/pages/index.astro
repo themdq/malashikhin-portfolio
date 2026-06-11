@@ -1,14 +1,81 @@
 ---
+import AboutTabs from '@/components/AboutTabs.astro';
 import PageShell from '@/components/PageShell.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { site } from '@/data/site';
+
+const socials = [
+  { label: 'Email', href: `mailto:${site.email}`, icon: 'mail' },
+  { label: 'LinkedIn', href: site.social.find((item) => item.label === 'LinkedIn')?.href ?? '#', icon: 'linkedin' },
+  { label: 'GitHub', href: site.social.find((item) => item.label === 'GitHub')?.href ?? '#', icon: 'github' },
+  { label: 'Telegram', href: site.social.find((item) => item.label === 'Telegram')?.href ?? '#', icon: 'telegram' },
+];
 ---
 
 <BaseLayout>
-  <PageShell active="index">
-    <main class="index-screen" id="main">
-      <h1>Hi, It’s Dmitrii</h1>
-      <p><span aria-hidden="true">//</span> {site.role}</p>
+  <PageShell>
+    <main class="single-page" id="main">
+      <section class="index-screen page-section" id="index" data-page-section="index">
+        <h1>Hi, It’s Dmitrii</h1>
+        <p><span aria-hidden="true">//</span> {site.role}</p>
+      </section>
+
+      <section class="about-screen page-section" id="about" data-page-section="about">
+        <header class="about-header">
+          <h2>{site.role}</h2>
+          <div class="rule-title" aria-hidden="true"><span>///</span><i></i><span>\\\</span></div>
+          <p>building reliable data systems end-to-end</p>
+        </header>
+        <AboutTabs />
+      </section>
+
+      <section class="contacts-screen page-section" id="contacts" data-page-section="contacts">
+        <header class="contacts-header">
+          <h2>Contacts</h2>
+          <div class="rule-title" aria-hidden="true"><span>///</span><i></i><span>\\\</span></div>
+          <p>Have a question or want to work together? I’d love to hear from you.</p>
+        </header>
+
+        <nav class="social-dock" aria-label="Contact links">
+          {socials.map((item) => (
+            <a href={item.href} target={item.icon === 'mail' ? undefined : '_blank'} rel={item.icon === 'mail' ? undefined : 'noreferrer'} aria-label={item.label}>
+              {item.icon === 'mail' && <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M7 12h34v24H7z"></path><path d="M8 13l16 11 16-11"></path></svg>}
+              {item.icon === 'linkedin' && <svg viewBox="0 0 48 48" aria-hidden="true" class="filled-icon"><path d="M10 16h8v24h-8zM14 8a4.4 4.4 0 1 1 0 8.8A4.4 4.4 0 0 1 14 8M22 16h7.5v3.3c1.1-1.9 3.6-3.8 7.4-3.8 7.9 0 9.1 5.1 9.1 11.8V40h-8V28.2c0-2.8-.1-6.4-4-6.4s-4.6 3-4.6 6.2v12h-7.9z"></path></svg>}
+              {item.icon === 'github' && <svg viewBox="0 0 48 48" aria-hidden="true" class="filled-icon"><path d="M24 6.8c-9.8 0-17.7 7.8-17.7 17.5 0 7.8 5.1 14.4 12.2 16.7.9.2 1.2-.4 1.2-.8v-3.1c-5 .9-6.1-2.1-6.1-2.1-.8-1.9-1.9-2.4-1.9-2.4-1.6-1.1.1-1.1.1-1.1 1.7.1 2.7 1.8 2.7 1.8 1.6 2.6 4.1 1.9 5.1 1.4.2-1.1.6-1.9 1.1-2.3-4-.5-8.2-2-8.2-8.7 0-1.9.7-3.5 1.8-4.8-.2-.4-.8-2.3.2-4.7 0 0 1.5-.5 4.9 1.8a17.3 17.3 0 0 1 8.9 0c3.4-2.3 4.9-1.8 4.9-1.8 1 2.4.4 4.3.2 4.7 1.1 1.3 1.8 2.8 1.8 4.8 0 6.8-4.2 8.2-8.2 8.7.6.5 1.2 1.6 1.2 3.2v4.7c0 .5.3 1 1.2.8a17.6 17.6 0 0 0 12.1-16.7C41.7 14.6 33.8 6.8 24 6.8z"></path></svg>}
+              {item.icon === 'telegram' && <svg viewBox="0 0 48 48" aria-hidden="true" class="filled-icon"><path d="M41 10.5 35.6 38c-.4 1.9-1.5 2.4-3 1.5l-8.2-6.1-4 3.8c-.4.5-.8.8-1.7.8l.6-8.4 15.3-13.8c.7-.6-.1-.9-1-.3L14.7 27.4 6.5 24.8c-1.8-.6-1.8-1.8.4-2.6L38.8 9.9c1.5-.5 2.8.4 2.2.6z"></path></svg>}
+            </a>
+          ))}
+        </nav>
+
+        <footer class="contact-footer"><span>/\ --------------</span><a href={`mailto:${site.email}`}>{site.domain}</a><span>-------------- /\</span></footer>
+      </section>
     </main>
   </PageShell>
 </BaseLayout>
+
+<script>
+  const sectionLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-section-link]'));
+  const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-page-section]'));
+
+  const setActiveSection = (id: string) => {
+    sectionLinks.forEach((link) => {
+      const active = link.dataset.sectionLink === id;
+      link.classList.toggle('is-active', active);
+      if (active) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      const id = (visible?.target as HTMLElement | undefined)?.dataset.pageSection;
+      if (id) setActiveSection(id);
+    },
+    { rootMargin: '-25% 0px -55%', threshold: [0, 0.2, 0.5] },
+  );
+
+  sections.forEach((section) => observer.observe(section));
+</script>
