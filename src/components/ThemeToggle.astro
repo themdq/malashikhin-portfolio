@@ -7,3 +7,43 @@
     <span class="sr-only" data-theme-label>Use dark theme</span>
   </button>
 </div>
+
+<style>
+  .theme-control { position: fixed; top: 26px; right: 28px; z-index: 30; }
+
+  .theme-toggle {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    background: linear-gradient(145deg, var(--glass-hover), var(--glass));
+    box-shadow: inset 0 1px 0 var(--glass-highlight), inset 0 -1px 0 rgba(100, 83, 62, .1), 0 12px 28px var(--glass-shadow);
+    color: var(--ink);
+    cursor: pointer;
+    backdrop-filter: blur(18px) saturate(145%);
+    transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--glass-highlight);
+    background: linear-gradient(145deg, var(--glass-border), var(--glass-hover));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .86), 0 16px 32px var(--glass-shadow);
+    transform: translateY(-3px) scale(1.035);
+  }
+
+  .theme-toggle svg {
+    width: 25px;
+    height: 25px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-width: 1.7;
+  }
+
+  @media (max-width: 780px) {
+    .theme-control { top: 17px; right: 16px; }
+    .theme-toggle { width: 46px; height: 46px; }
+  }
+</style>

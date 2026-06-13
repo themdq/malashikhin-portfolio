@@ -1,0 +1,47 @@
+:root {
+  color-scheme: light;
+  --page: #fffcf0;
+  --surface: rgba(242, 240, 229, .74);
+  --ink: #100f0f;
+  --muted: #6f6e69;
+  --line: #cecdc3;
+  --line-strong: #b7b5ac;
+  --orange: #bc5215;
+  --orange-deep: #9d4310;
+  --orange-soft: #ffe7ce;
+  --on-orange: #fffcf0;
+  --shadow: rgba(16, 15, 15, 0.16);
+  --glass: rgba(255, 252, 240, .56);
+  --glass-hover: rgba(255, 252, 240, .78);
+  --glass-border: rgba(255, 255, 255, .82);
+  --glass-highlight: rgba(255, 255, 255, .72);
+  --glass-shadow: rgba(84, 66, 44, .16);
+  --serif: 'Instrument Serif', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+  --rail-left: clamp(28px, 1.55vw, 32px);
+  --rail-width: clamp(224px, 12vw, 240px);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --page: #100f0f;
+  --surface: rgba(28, 27, 26, .88);
+  --ink: #cecdc3;
+  --muted: #878580;
+  --line: #403e3c;
+  --line-strong: #575653;
+  --orange: #da702c;
+  --orange-deep: #bc5215;
+  --orange-soft: #40200d;
+  --on-orange: #fffcf0;
+  --shadow: rgba(16, 15, 15, 0.42);
+  --glass: rgba(52, 50, 47, .58);
+  --glass-hover: rgba(66, 63, 59, .76);
+  --glass-border: rgba(255, 252, 240, .16);
+  --glass-highlight: rgba(255, 252, 240, .13);
+  --glass-shadow: rgba(0, 0, 0, .38);
+}
+
+@media (max-width: 1020px) {
+  :root { --rail-width: 220px; }
+}

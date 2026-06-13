@@ -79,3 +79,113 @@ const socials = [
 
   sections.forEach((section) => observer.observe(section));
 </script>
+
+<style>
+  .single-page { margin-left: calc(var(--rail-left) + var(--rail-width)); }
+  .page-section { min-height: 100vh; scroll-margin-top: 0; }
+
+  .index-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+    padding: 80px 7vw;
+  }
+
+  .index-screen h1, .about-header h2, .contacts-header h2 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(76px, 5.35vw, 106px);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.035em;
+    line-height: .95;
+  }
+
+  .index-screen p { margin: 45px 0 0; color: var(--muted); font-size: 20px; white-space: nowrap; }
+  :global(:root[data-theme='dark']) .index-screen p { color: var(--muted); }
+  .index-screen p span { margin-right: 14px; }
+  .about-screen { padding: 92px clamp(48px, 8vw, 150px) 56px; }
+  .about-header { text-align: center; }
+  .about-header h2 { font-size: clamp(76px, 6.2vw, 120px); }
+  .about-header > p { margin: -5px 0 48px; font-size: clamp(24px, 2.15vw, 42px); }
+
+  .rule-title {
+    display: flex;
+    width: min(690px, 85%);
+    align-items: center;
+    gap: 14px;
+    margin: 13px auto 0;
+    color: var(--muted);
+  }
+
+  .rule-title i { height: 1px; flex: 1; background: repeating-linear-gradient(90deg, var(--line) 0 7px, transparent 7px 12px); }
+  .rule-title span { font-size: 19px; font-style: normal; }
+  .contacts-screen { display: grid; grid-template-rows: 1fr auto 72px; padding: 125px 48px 28px; }
+  .contacts-header { width: min(620px, 100%); justify-self: center; text-align: center; }
+  .contacts-header h2 { font-size: clamp(76px, 5.8vw, 112px); }
+  .contacts-header p { max-width: 520px; margin: 8px auto 0; font-size: 17px; line-height: 1.35; }
+  .contacts-header .rule-title { width: 100%; }
+
+  .social-dock {
+    display: flex;
+    width: min(440px, 90vw);
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    justify-self: center;
+    margin-bottom: 42px;
+    padding: 20px 36px;
+    border: 1px solid var(--glass-border);
+    border-radius: 38px;
+    background: linear-gradient(145deg, var(--glass-hover), var(--glass));
+    box-shadow: inset 0 1px 0 var(--glass-highlight), 0 18px 34px var(--glass-shadow);
+    backdrop-filter: blur(20px) saturate(140%);
+  }
+
+  .social-dock a {
+    display: grid;
+    width: 56px;
+    height: 56px;
+    place-items: center;
+    border: 1px solid transparent;
+    border-radius: 18px;
+    color: var(--orange);
+    transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .social-dock a:hover {
+    border-color: var(--glass-border);
+    background: var(--glass-hover);
+    box-shadow: inset 0 1px 0 var(--glass-highlight), 0 10px 20px var(--glass-shadow);
+    transform: translateY(-4px) scale(1.035);
+  }
+
+  .social-dock svg { width: 56px; height: 56px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 4.2; }
+  .social-dock .filled-icon { fill: currentColor; stroke: none; }
+  .contact-footer { display: flex; align-items: center; justify-content: center; gap: 30px; color: var(--muted); font-size: 17px; }
+  .contact-footer a { transition: color 180ms ease, text-shadow 180ms ease; }
+  .contact-footer a:hover { color: var(--ink); text-shadow: 0 4px 14px var(--glass-shadow); }
+
+  @media (max-width: 1020px) {
+    .about-screen { padding-right: 38px; padding-left: 38px; }
+    .index-screen { flex-direction: column; gap: 0; text-align: center; }
+    .index-screen p { margin-top: 22px; }
+  }
+
+  @media (max-width: 780px) {
+    .single-page { margin-left: 0; }
+    .page-section { scroll-margin-top: 82px; }
+    .index-screen { padding: 100px 24px 40px; }
+    .index-screen h1 { font-size: clamp(64px, 17vw, 92px); }
+    .index-screen p { font-size: 16px; white-space: normal; }
+    .about-screen { padding: 110px 18px 40px; }
+    .about-header h2 { font-size: clamp(58px, 15vw, 86px); }
+    .about-header > p { margin-bottom: 34px; font-size: clamp(18px, 5vw, 28px); }
+    .contacts-screen { padding: 130px 18px 24px; }
+    .contacts-header h2 { font-size: clamp(65px, 18vw, 88px); }
+    .contacts-header p { font-size: 14px; }
+    .contact-footer { gap: 12px; font-size: 12px; }
+    .contact-footer span { max-width: 82px; overflow: hidden; white-space: nowrap; }
+  }
+</style>

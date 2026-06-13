@@ -84,11 +84,19 @@ export const capabilities: CapabilityGroup[] = [
   { title: 'Systems', items: ['PostgreSQL', 'Kafka', 'Elasticsearch', 'CI/CD'] },
 ];
 
-export const education = {
+export const education = [
+  {
   degree: 'Master in Information Systems',
   school: 'Admiral Makarov State University',
+  period: '2022 - 2024',
+},
+{
+  degree: 'Bachelor in Computer Science',
+  school: 'Admiral Makarov State University',
   period: '2018 - 2022',
-} as const;
+}
+
+] as const;
 
 export const interests = [
   'MMA',
