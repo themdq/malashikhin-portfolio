@@ -8,11 +8,11 @@ const nav = [
 ] as const;
 ---
 
-<aside class="sidebar" id="top">
+<aside class="sidebar" id="top" data-liquid-glass="amber">
   <a class="sidebar-brand" href="#index" aria-label={`${site.name}, home`}>d@malashikh.in ~</a>
   <nav class="sidebar-nav" aria-label="Primary navigation">
     {nav.map((item) => (
-      <a class:list={{ 'is-active': item.key === 'index' }} href={item.href} data-section-link={item.key}>
+      <a class:list={{ 'is-active': item.key === 'index' }} href={item.href} data-section-link={item.key} data-liquid-glass="accent" data-liquid-glass-active>
         {item.label}
       </a>
     ))}
@@ -23,11 +23,11 @@ const nav = [
   <span class="sidebar-prompt" aria-hidden="true">&gt;_</span>
 </aside>
 
-<nav class="mobile-nav" aria-label="Mobile navigation">
+<nav class="mobile-nav" aria-label="Mobile navigation" data-liquid-glass="amber">
   <a class="mobile-brand" href="#index">d@malashikh.in ~</a>
   <div>
     {nav.map((item) => (
-      <a class:list={{ 'is-active': item.key === 'index' }} href={item.href} data-section-link={item.key}>
+      <a class:list={{ 'is-active': item.key === 'index' }} href={item.href} data-section-link={item.key} data-liquid-glass="accent" data-liquid-glass-active>
         {item.label}
       </a>
     ))}
