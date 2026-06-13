@@ -12,7 +12,7 @@ const nav = [
   <a class="sidebar-brand" href="#index" aria-label={`${site.name}, home`}>d@malashikh.in ~</a>
   <nav class="sidebar-nav" aria-label="Primary navigation">
     {nav.map((item) => (
-      <a class:list={{ 'is-active': item.key === 'index' }} href={item.href} data-section-link={item.key} data-liquid-glass="accent" data-liquid-glass-active>
+      <a class:list={{ 'is-active': item.key === 'index' }} href={item.href} data-section-link={item.key}>
         {item.label}
       </a>
     ))}
@@ -27,7 +27,7 @@ const nav = [
   <a class="mobile-brand" href="#index">d@malashikh.in ~</a>
   <div>
     {nav.map((item) => (
-      <a class:list={{ 'is-active': item.key === 'index' }} href={item.href} data-section-link={item.key} data-liquid-glass="accent" data-liquid-glass-active>
+      <a class:list={{ 'is-active': item.key === 'index' }} href={item.href} data-section-link={item.key}>
         {item.label}
       </a>
     ))}
@@ -80,16 +80,16 @@ const nav = [
   }
 
   .sidebar-nav a.is-active {
-    border-color: rgba(255, 252, 240, .52);
-    background: linear-gradient(180deg, rgba(255, 252, 240, .24), rgba(255, 231, 206, .12));
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .38), inset 0 -1px 0 rgba(112, 45, 8, .18), 0 5px 12px rgba(80, 30, 6, .28);
-    backdrop-filter: blur(12px) saturate(135%);
+    border-color: rgba(255, 255, 255, .16);
+    background: rgba(255, 255, 255, .06);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 8px 18px rgba(80, 30, 6, .2);
+    backdrop-filter: blur(16px) saturate(140%);
   }
 
   .sidebar-nav a:hover {
-    border-color: rgba(255, 252, 240, .42);
-    background: linear-gradient(180deg, rgba(255, 252, 240, .2), rgba(255, 231, 206, .08));
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .34), 0 6px 14px rgba(80, 30, 6, .24);
+    border-color: rgba(255, 255, 255, .14);
+    background: rgba(255, 255, 255, .05);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .16), 0 6px 14px rgba(80, 30, 6, .18);
     transform: translateX(3px) translateY(-1px);
   }
 
@@ -136,9 +136,9 @@ const nav = [
     }
 
     .mobile-nav div a:hover, .mobile-nav div a.is-active {
-      border-color: rgba(255, 252, 240, .34);
-      background: rgba(255, 252, 240, .18);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .24), 0 5px 12px rgba(80, 30, 6, .2);
+      border-color: rgba(255, 255, 255, .16);
+      background: rgba(255, 255, 255, .06);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 5px 12px rgba(80, 30, 6, .18);
       transform: translateY(-1px);
     }
   }
