@@ -164,6 +164,8 @@ const socials = [
     transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
   }
 
+  :global(:root[data-theme='dark']) .social-dock a { color: var(--orange-deep); }
+
   .social-dock a:hover {
     border-color: var(--glass-border);
     background: var(--glass-hover);
