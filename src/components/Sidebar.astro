@@ -18,7 +18,7 @@ const nav = [
   data-liquid-glass="amber"
 >[dm]</button>
 
-<aside class="sidebar" id="top" aria-hidden="true" inert data-sidebar data-liquid-glass="amber">
+<aside class="sidebar" id="top" aria-hidden="true" inert hidden data-sidebar data-liquid-glass="amber">
   <button class="sidebar-close" type="button" aria-label="Close navigation" data-sidebar-close>[X]</button>
   <nav class="sidebar-nav" aria-label="Primary navigation">
     {nav.map((item) => (
@@ -50,12 +50,34 @@ const nav = [
   const close = document.querySelector<HTMLButtonElement>('[data-sidebar-close]');
 
   if (sidebar && toggle) {
+    let transitionTimer = 0;
+
     const setSidebarOpen = (open: boolean) => {
-      document.documentElement.classList.toggle('sidebar-open', open);
+      const restoreToggleFocus = sidebar.contains(document.activeElement);
+      clearTimeout(transitionTimer);
       sidebar.setAttribute('aria-hidden', String(!open));
       sidebar.inert = !open;
       toggle.setAttribute('aria-expanded', String(open));
       toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+
+      if (open) {
+        document.documentElement.classList.remove('sidebar-closed');
+        sidebar.hidden = false;
+        toggle.hidden = true;
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => document.documentElement.classList.add('sidebar-open'));
+        });
+        return;
+      }
+
+      document.documentElement.classList.remove('sidebar-open');
+      const duration = matchMedia('(prefers-reduced-motion: reduce)').matches ? 20 : 340;
+      transitionTimer = window.setTimeout(() => {
+        sidebar.hidden = true;
+        toggle.hidden = false;
+        document.documentElement.classList.add('sidebar-closed');
+        if (restoreToggleFocus) toggle.focus();
+      }, duration);
     };
 
     toggle.addEventListener('click', () => {
@@ -64,7 +86,6 @@ const nav = [
 
     close?.addEventListener('click', () => {
       setSidebarOpen(false);
-      toggle.focus();
     });
 
     addEventListener('keydown', (event) => {
@@ -102,22 +123,21 @@ const nav = [
     transform: translateY(-2px);
   }
 
-  :global(.sidebar-open) .sidebar-toggle {
-    display: none;
-  }
+  .sidebar-toggle[hidden] { display: none; }
 
   .sidebar {
     position: fixed;
     top: 28px;
-    bottom: 28px;
     left: var(--rail-left);
     z-index: 20;
     display: flex;
-    width: var(--rail-width);
+    width: 64px;
+    height: 52px;
     flex-direction: column;
-    padding: 36px 32px 30px;
+    overflow: hidden;
+    padding: 0;
     border: 1px solid var(--orange);
-    border-radius: 40px;
+    border-radius: 19px;
     background:
       linear-gradient(180deg, #bc5215 0%, #da702c 50.07%, #bc5215 100%),
       linear-gradient(0deg, #da702c, #da702c),
@@ -127,17 +147,23 @@ const nav = [
     background-blend-mode: normal, plus-darker, overlay, saturation, normal;
     box-shadow: 0 8px 40px rgba(0, 0, 0, .12);
     color: var(--on-orange);
-    opacity: 0;
     pointer-events: none;
-    transform: translateX(calc(-100% - var(--rail-left) - 20px));
-    transition: opacity 220ms ease, transform 320ms cubic-bezier(.22, 1, .36, 1);
+    transition:
+      width 340ms cubic-bezier(.22, 1, .36, 1),
+      height 340ms cubic-bezier(.22, 1, .36, 1),
+      padding 340ms cubic-bezier(.22, 1, .36, 1),
+      border-radius 340ms cubic-bezier(.22, 1, .36, 1);
   }
 
   :global(.sidebar-open) .sidebar {
-    opacity: 1;
+    width: var(--rail-width);
+    height: calc(100vh - 56px);
+    padding: 36px 32px 30px;
+    border-radius: 40px;
     pointer-events: auto;
-    transform: translateX(0);
   }
+
+  .sidebar[hidden] { display: none; }
 
   .sidebar-close {
     position: absolute;
@@ -149,7 +175,8 @@ const nav = [
     background: transparent;
     color: inherit;
     cursor: pointer;
-    transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+    opacity: 0;
+    transition: background-color 180ms ease, border-color 180ms ease, opacity 140ms ease, transform 180ms ease;
   }
 
   .sidebar-close:hover {
@@ -159,6 +186,20 @@ const nav = [
   }
 
   .sidebar-brand { margin-top: auto; white-space: nowrap; }
+
+  .sidebar-brand, .sidebar-nav {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 150ms ease, transform 200ms ease;
+  }
+
+  :global(.sidebar-open) .sidebar-close,
+  :global(.sidebar-open) .sidebar-brand,
+  :global(.sidebar-open) .sidebar-nav {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 130ms;
+  }
 
   .sidebar-nav {
     display: grid;
@@ -197,7 +238,7 @@ const nav = [
   .mobile-nav { display: none; }
 
   @media (max-width: 1020px) {
-    .sidebar { padding-right: 28px; padding-left: 28px; }
+    :global(.sidebar-open) .sidebar { padding-right: 28px; padding-left: 28px; }
   }
 
   @media (max-width: 780px) {
