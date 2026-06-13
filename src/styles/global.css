@@ -70,6 +70,19 @@ body {
   -webkit-backdrop-filter: none !important;
 }
 
+.liquid-glass-ready [data-liquid-glass='amber'] {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, .1), transparent 18%, transparent 82%, rgba(92, 24, 3, .12)),
+    linear-gradient(
+      180deg,
+      rgba(126, 39, 7, .68) 0%,
+      rgba(188, 82, 21, .44) 22%,
+      rgba(247, 145, 67, .18) 50%,
+      rgba(188, 82, 21, .44) 78%,
+      rgba(126, 39, 7, .68) 100%
+    ) !important;
+}
+
 :root[data-theme='dark'].liquid-glass-ready [data-liquid-glass]:not([data-liquid-glass-active]),
 :root[data-theme='dark'].liquid-glass-ready [data-liquid-glass-active].is-active {
   border-color: rgba(255, 252, 240, .18) !important;
