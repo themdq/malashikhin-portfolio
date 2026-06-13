@@ -8,7 +8,17 @@ const nav = [
 ] as const;
 ---
 
-<aside class="sidebar" id="top" data-liquid-glass="amber">
+<button
+  class="sidebar-toggle"
+  type="button"
+  aria-controls="top"
+  aria-expanded="false"
+  aria-label="Open navigation"
+  data-sidebar-toggle
+  data-liquid-glass="amber"
+>[dm]</button>
+
+<aside class="sidebar" id="top" aria-hidden="true" inert data-sidebar data-liquid-glass="amber">
   <a class="sidebar-brand" href="#index" aria-label={`${site.name}, home`}>d@malashikh.in ~</a>
   <nav class="sidebar-nav" aria-label="Primary navigation">
     {nav.map((item) => (
@@ -34,7 +44,62 @@ const nav = [
   </div>
 </nav>
 
+<script>
+  const sidebar = document.querySelector<HTMLElement>('[data-sidebar]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-sidebar-toggle]');
+
+  if (sidebar && toggle) {
+    const setSidebarOpen = (open: boolean) => {
+      document.documentElement.classList.toggle('sidebar-open', open);
+      sidebar.setAttribute('aria-hidden', String(!open));
+      sidebar.inert = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+    };
+
+    toggle.addEventListener('click', () => {
+      setSidebarOpen(!document.documentElement.classList.contains('sidebar-open'));
+    });
+
+    sidebar.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
+      link.addEventListener('click', () => setSidebarOpen(false));
+    });
+
+    addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') setSidebarOpen(false);
+    });
+
+    setSidebarOpen(false);
+  }
+</script>
+
 <style>
+  .sidebar-toggle {
+    position: fixed;
+    top: 28px;
+    left: var(--rail-left);
+    z-index: 22;
+    display: grid;
+    width: 64px;
+    height: 52px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid rgba(255, 252, 240, .34);
+    border-radius: 19px;
+    background: linear-gradient(145deg, rgba(232, 121, 47, .95), rgba(157, 67, 16, .92));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .3), 0 12px 28px rgba(80, 30, 6, .24);
+    color: var(--on-orange);
+    cursor: pointer;
+    backdrop-filter: blur(18px) saturate(145%);
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .sidebar-toggle:hover {
+    border-color: rgba(255, 252, 240, .52);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .38), 0 15px 32px rgba(80, 30, 6, .28);
+    transform: translateY(-2px);
+  }
+
   .sidebar {
     position: fixed;
     top: 28px;
@@ -56,9 +121,19 @@ const nav = [
     background-blend-mode: normal, plus-darker, overlay, saturation, normal;
     box-shadow: 0 8px 40px rgba(0, 0, 0, .12);
     color: var(--on-orange);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(calc(-100% - var(--rail-left) - 20px));
+    transition: opacity 220ms ease, transform 320ms cubic-bezier(.22, 1, .36, 1);
   }
 
-  .sidebar-brand { white-space: nowrap; }
+  :global(.sidebar-open) .sidebar {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+
+  .sidebar-brand { margin-top: 58px; white-space: nowrap; }
 
   .sidebar-nav {
     display: grid;
@@ -102,7 +177,7 @@ const nav = [
   }
 
   @media (max-width: 780px) {
-    .sidebar { display: none; }
+    .sidebar, .sidebar-toggle { display: none; }
 
     .mobile-nav {
       position: fixed;
