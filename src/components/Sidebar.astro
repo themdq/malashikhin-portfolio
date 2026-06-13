@@ -50,6 +50,7 @@ const nav = [
   const sidebar = document.querySelector<HTMLElement>('[data-sidebar]');
   const toggle = document.querySelector<HTMLButtonElement>('[data-sidebar-toggle]');
   const close = document.querySelector<HTMLButtonElement>('[data-sidebar-close]');
+  const sidebarIndicator = sidebar?.querySelector<HTMLElement>('[data-section-indicator]');
   const sectionNavs = Array.from(document.querySelectorAll<HTMLElement>('[data-section-nav]'));
   let indicatorAnimationFrame = 0;
   let indicatorUpdateFrame = 0;
@@ -113,6 +114,7 @@ const nav = [
       if (open) {
         document.documentElement.classList.remove('sidebar-closed');
         sidebar.hidden = false;
+        if (sidebarIndicator) sidebarIndicator.hidden = false;
         toggle.hidden = true;
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
@@ -123,6 +125,8 @@ const nav = [
         return;
       }
 
+      if (sidebarIndicator) sidebarIndicator.hidden = true;
+      dispatchEvent(new CustomEvent('liquid-glass-update'));
       document.documentElement.classList.remove('sidebar-open');
       const duration = matchMedia('(prefers-reduced-motion: reduce)').matches ? 20 : 340;
       transitionTimer = window.setTimeout(() => {
