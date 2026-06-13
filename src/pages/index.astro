@@ -88,11 +88,10 @@ const socials = [
 
 <style>
   .single-page {
-    margin-inline: 0;
-    transition: margin 320ms cubic-bezier(.22, 1, .36, 1);
+    width: calc(100% - 2 * (var(--rail-left) + var(--rail-width)));
+    margin-inline: auto;
   }
 
-  :global(.sidebar-open) .single-page { margin-inline: calc(var(--rail-left) + var(--rail-width)); }
   .page-section { min-height: 100vh; scroll-margin-top: 0; }
 
   .index-screen {
@@ -185,7 +184,7 @@ const socials = [
   }
 
   @media (max-width: 780px) {
-    .single-page { margin-inline: 0; }
+    .single-page { width: 100%; margin-inline: 0; }
     .page-section { scroll-margin-top: 82px; }
     .index-screen { padding: 100px 24px 40px; }
     .index-screen h1 { max-width: 100%; font-size: clamp(48px, 12.5vw, 72px); line-height: .98; white-space: normal; }
