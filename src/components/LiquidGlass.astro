@@ -259,6 +259,7 @@
           Object.assign(tuning, (event as CustomEvent<Partial<typeof tuning>>).detail);
           requestDraw();
         });
+        addEventListener('liquid-glass-update', requestDraw);
 
         const observer = new ResizeObserver(requestDraw);
         document.querySelectorAll<HTMLElement>('[data-liquid-glass]').forEach((element) => observer.observe(element));
