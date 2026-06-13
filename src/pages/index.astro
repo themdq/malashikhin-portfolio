@@ -36,6 +36,11 @@ const socials = [
           <p>Have a question or want to work together? I’d love to hear from you.</p>
         </header>
 
+        <div class="contact-connector" aria-hidden="true">
+          <span class="contact-connector-line">||||||||||||</span>
+          <span>⌄</span>
+        </div>
+
         <nav class="social-dock" aria-label="Contact links" data-liquid-glass="clear">
           {socials.map((item) => (
             <a href={item.href} target={item.icon === 'mail' ? undefined : '_blank'} rel={item.icon === 'mail' ? undefined : 'noreferrer'} aria-label={item.label}>
@@ -169,11 +174,35 @@ const socials = [
 
   .rule-title span { font-size: 19px; font-style: normal; }
   .rule-title .rule-line { flex: 1; overflow: hidden; color: var(--line); letter-spacing: .08em; white-space: nowrap; }
-  .contacts-screen { display: grid; grid-template-rows: 1fr auto 72px; padding: 125px 48px 28px; }
+  .contacts-screen { display: grid; grid-template-rows: auto 1fr auto 72px; padding: 125px 48px 28px; }
   .contacts-header { width: min(620px, 100%); justify-self: center; text-align: center; }
   .contacts-header h2 { font-size: clamp(76px, 5.8vw, 112px); }
   .contacts-header p { max-width: 520px; margin: 8px auto 0; font-size: 17px; line-height: 1.35; }
   .contacts-header .rule-title { width: 100%; }
+
+  .contact-connector {
+    display: flex;
+    min-height: 72px;
+    flex-direction: column;
+    align-items: center;
+    justify-self: center;
+    padding: 12px 0 8px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 19px;
+    line-height: 1;
+  }
+
+  .contact-connector-line {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    overflow: hidden;
+    color: var(--line);
+    line-height: .72;
+    text-orientation: upright;
+    writing-mode: vertical-rl;
+  }
 
   .social-dock {
     display: flex;
@@ -235,6 +264,7 @@ const socials = [
     .contacts-screen { padding: 160px 18px 24px; }
     .contacts-header h2 { font-size: clamp(65px, 18vw, 88px); }
     .contacts-header p { font-size: 14px; }
+    .contact-connector { min-height: 56px; padding-top: 8px; }
     .contact-footer { gap: 12px; font-size: 12px; }
     .contact-footer span { max-width: 82px; overflow: hidden; white-space: nowrap; }
   }
