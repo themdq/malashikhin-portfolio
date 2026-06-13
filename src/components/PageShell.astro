@@ -2,12 +2,14 @@
 import Sidebar from '@/components/Sidebar.astro';
 import ThemeToggle from '@/components/ThemeToggle.astro';
 import LiquidGlass from '@/components/LiquidGlass.astro';
+import GlassControls from '@/components/GlassControls.astro';
 ---
 
 <div class="page-shell">
   <LiquidGlass />
   <Sidebar />
   <ThemeToggle />
+  {import.meta.env.DEV && <GlassControls />}
   <slot />
 </div>
 

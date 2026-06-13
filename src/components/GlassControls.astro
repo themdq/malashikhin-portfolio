@@ -1,0 +1,122 @@
+<aside class="glass-controls" data-glass-controls>
+  <header>
+    <strong>Glass controls</strong>
+    <button type="button" data-glass-close aria-label="Hide glass controls">&times;</button>
+  </header>
+
+  <label>Refraction <input name="displacement" type="range" min="0" max="60" step="1" value="24" /><output>24</output></label>
+  <label>Bezel <input name="bezel" type="range" min="8" max="60" step="1" value="42" /><output>42</output></label>
+  <label>Tint <input name="tint" type="range" min="0" max="1" step="0.01" value="0.72" /><output>0.72</output></label>
+  <label>Specular <input name="specular" type="range" min="0" max="1" step="0.01" value="0.55" /><output>0.55</output></label>
+  <label>Shadow <input name="shadow" type="range" min="0" max="0.5" step="0.01" value="0.18" /><output>0.18</output></label>
+  <label>Edge color <input name="edgeOpacity" type="range" min="0" max="1" step="0.01" value="0.68" /><output>0.68</output></label>
+  <label>Center color <input name="centerOpacity" type="range" min="0" max="1" step="0.01" value="0.18" /><output>0.18</output></label>
+
+  <footer>
+    <button type="button" data-glass-reset>Reset</button>
+  </footer>
+</aside>
+
+<button class="glass-controls-open" type="button" data-glass-open hidden>Glass controls</button>
+
+<script>
+  const panel = document.querySelector<HTMLElement>('[data-glass-controls]');
+  const openButton = document.querySelector<HTMLButtonElement>('[data-glass-open]');
+  const defaults = {
+    displacement: 24,
+    bezel: 42,
+    tint: 0.72,
+    specular: 0.55,
+    shadow: 0.18,
+    edgeOpacity: 0.68,
+    centerOpacity: 0.18,
+  };
+
+  if (panel && openButton) {
+    const inputs = Array.from(panel.querySelectorAll<HTMLInputElement>('input[type="range"]'));
+    const saved = localStorage.getItem('portfolio-glass-settings');
+    const settings = { ...defaults, ...(saved ? JSON.parse(saved) : {}) };
+
+    const apply = () => {
+      document.documentElement.style.setProperty('--glass-edge-opacity', String(settings.edgeOpacity));
+      document.documentElement.style.setProperty('--glass-center-opacity', String(settings.centerOpacity));
+      window.dispatchEvent(new CustomEvent('liquid-glass-settings', { detail: settings }));
+      localStorage.setItem('portfolio-glass-settings', JSON.stringify(settings));
+    };
+
+    const syncInputs = () => {
+      inputs.forEach((input) => {
+        const key = input.name as keyof typeof settings;
+        input.value = String(settings[key]);
+        const output = input.nextElementSibling;
+        if (output) output.textContent = input.value;
+      });
+    };
+
+    inputs.forEach((input) => input.addEventListener('input', () => {
+      const key = input.name as keyof typeof settings;
+      settings[key] = Number(input.value);
+      const output = input.nextElementSibling;
+      if (output) output.textContent = input.value;
+      apply();
+    }));
+
+    panel.querySelector('[data-glass-reset]')?.addEventListener('click', () => {
+      Object.assign(settings, defaults);
+      syncInputs();
+      apply();
+    });
+
+    panel.querySelector('[data-glass-close]')?.addEventListener('click', () => {
+      panel.hidden = true;
+      openButton.hidden = false;
+    });
+
+    openButton.addEventListener('click', () => {
+      panel.hidden = false;
+      openButton.hidden = true;
+    });
+
+    syncInputs();
+    apply();
+  }
+</script>
+
+<style>
+  .glass-controls, .glass-controls-open {
+    position: fixed;
+    z-index: 100;
+    border: 1px solid rgba(255, 255, 255, .18);
+    background: rgba(24, 31, 35, .9);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .28);
+    color: #fff;
+    backdrop-filter: blur(20px);
+  }
+
+  .glass-controls {
+    top: 20px;
+    right: 20px;
+    display: grid;
+    width: 310px;
+    gap: 13px;
+    padding: 18px;
+    border-radius: 20px;
+    font-size: 12px;
+  }
+
+  .glass-controls[hidden] { display: none; }
+  .glass-controls header, .glass-controls label, .glass-controls footer { display: flex; align-items: center; }
+  .glass-controls header { justify-content: space-between; margin-bottom: 4px; }
+  .glass-controls header button { border: 0; background: transparent; color: inherit; font-size: 24px; cursor: pointer; }
+  .glass-controls label { display: grid; grid-template-columns: 92px 1fr 40px; gap: 8px; }
+  .glass-controls input { width: 100%; accent-color: #da702c; }
+  .glass-controls output { color: rgba(255, 255, 255, .62); text-align: right; }
+  .glass-controls footer { justify-content: flex-end; margin-top: 4px; }
+  .glass-controls footer button, .glass-controls-open { padding: 8px 12px; border-radius: 10px; cursor: pointer; }
+  .glass-controls-open { top: 20px; right: 20px; }
+  .glass-controls-open[hidden] { display: none; }
+
+  @media (max-width: 780px) {
+    .glass-controls { right: 12px; width: min(310px, calc(100vw - 24px)); }
+  }
+</style>

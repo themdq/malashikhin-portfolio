@@ -75,11 +75,11 @@ body {
     linear-gradient(90deg, rgba(255, 255, 255, .1), transparent 18%, transparent 82%, rgba(92, 24, 3, .12)),
     linear-gradient(
       180deg,
-      rgba(126, 39, 7, .68) 0%,
+      rgba(126, 39, 7, var(--glass-edge-opacity, .68)) 0%,
       rgba(188, 82, 21, .44) 22%,
-      rgba(247, 145, 67, .18) 50%,
+      rgba(247, 145, 67, var(--glass-center-opacity, .18)) 50%,
       rgba(188, 82, 21, .44) 78%,
-      rgba(126, 39, 7, .68) 100%
+      rgba(126, 39, 7, var(--glass-edge-opacity, .68)) 100%
     ) !important;
 }
 
