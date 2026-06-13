@@ -78,6 +78,12 @@ const socials = [
   );
 
   sections.forEach((section) => observer.observe(section));
+  sectionLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      const id = link.dataset.sectionLink;
+      if (id) setActiveSection(id);
+    });
+  });
 </script>
 
 <style>

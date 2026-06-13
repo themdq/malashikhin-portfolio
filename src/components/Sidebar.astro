@@ -20,7 +20,8 @@ const nav = [
 
 <aside class="sidebar" id="top" aria-hidden="true" inert hidden data-sidebar data-liquid-glass="amber">
   <button class="sidebar-close" type="button" aria-label="Close navigation" data-sidebar-close>[X]</button>
-  <nav class="sidebar-nav" aria-label="Primary navigation">
+  <nav class="sidebar-nav" aria-label="Primary navigation" data-section-nav>
+    <span class="section-indicator" aria-hidden="true" data-section-indicator data-liquid-glass="amber"></span>
     {nav.map((item) => (
       <a class:list={{ 'is-active': item.key === 'index' }} href={item.href} data-section-link={item.key}>
         {item.label}
@@ -35,7 +36,8 @@ const nav = [
 
 <nav class="mobile-nav" aria-label="Mobile navigation" data-liquid-glass="amber">
   <a class="mobile-brand" href="#index">d@malashikh.in ~</a>
-  <div>
+  <div class="mobile-nav-links" data-section-nav>
+    <span class="section-indicator" aria-hidden="true" data-section-indicator data-liquid-glass="amber"></span>
     {nav.map((item) => (
       <a class:list={{ 'is-active': item.key === 'index' }} href={item.href} data-section-link={item.key}>
         {item.label}
@@ -48,6 +50,54 @@ const nav = [
   const sidebar = document.querySelector<HTMLElement>('[data-sidebar]');
   const toggle = document.querySelector<HTMLButtonElement>('[data-sidebar-toggle]');
   const close = document.querySelector<HTMLButtonElement>('[data-sidebar-close]');
+  const sectionNavs = Array.from(document.querySelectorAll<HTMLElement>('[data-section-nav]'));
+  let indicatorAnimationFrame = 0;
+  let indicatorUpdateFrame = 0;
+
+  const redrawGlassDuringTransition = () => {
+    cancelAnimationFrame(indicatorAnimationFrame);
+    const startedAt = performance.now();
+    const redraw = (now: number) => {
+      dispatchEvent(new CustomEvent('liquid-glass-update'));
+      if (now - startedAt < 520) indicatorAnimationFrame = requestAnimationFrame(redraw);
+    };
+    indicatorAnimationFrame = requestAnimationFrame(redraw);
+  };
+
+  const moveSectionIndicator = (nav: HTMLElement, animate: boolean) => {
+    const indicator = nav.querySelector<HTMLElement>('[data-section-indicator]');
+    const activeLink = nav.querySelector<HTMLElement>('[data-section-link].is-active');
+    if (!indicator || !activeLink) return;
+    indicator.classList.toggle('is-ready', animate);
+    indicator.style.setProperty('--indicator-x', `${activeLink.offsetLeft}px`);
+    indicator.style.setProperty('--indicator-y', `${activeLink.offsetTop}px`);
+    indicator.style.setProperty('--indicator-width', `${activeLink.offsetWidth}px`);
+    indicator.style.setProperty('--indicator-height', `${activeLink.offsetHeight}px`);
+    if (!animate) requestAnimationFrame(() => indicator.classList.add('is-ready'));
+  };
+
+  const updateSectionIndicators = (animate: boolean) => {
+    sectionNavs.forEach((nav) => moveSectionIndicator(nav, animate));
+    dispatchEvent(new CustomEvent('liquid-glass-update'));
+    if (animate && !matchMedia('(prefers-reduced-motion: reduce)').matches) redrawGlassDuringTransition();
+  };
+
+  const scheduleIndicatorUpdate = (animate: boolean) => {
+    cancelAnimationFrame(indicatorUpdateFrame);
+    indicatorUpdateFrame = requestAnimationFrame(() => updateSectionIndicators(animate));
+  };
+
+  const activeSectionObserver = new MutationObserver((mutations) => {
+    if (mutations.some((mutation) => (mutation.target as HTMLElement).hasAttribute('data-section-link'))) {
+      scheduleIndicatorUpdate(true);
+    }
+  });
+  const sectionNavResizeObserver = new ResizeObserver(() => scheduleIndicatorUpdate(false));
+  sectionNavs.forEach((nav) => {
+    activeSectionObserver.observe(nav, { attributes: true, subtree: true, attributeFilter: ['class'] });
+    sectionNavResizeObserver.observe(nav);
+  });
+  scheduleIndicatorUpdate(false);
 
   if (sidebar && toggle) {
     let transitionTimer = 0;
@@ -65,7 +115,10 @@ const nav = [
         sidebar.hidden = false;
         toggle.hidden = true;
         requestAnimationFrame(() => {
-          requestAnimationFrame(() => document.documentElement.classList.add('sidebar-open'));
+          requestAnimationFrame(() => {
+            document.documentElement.classList.add('sidebar-open');
+            scheduleIndicatorUpdate(false);
+          });
         });
         return;
       }
@@ -202,6 +255,7 @@ const nav = [
   }
 
   .sidebar-nav {
+    position: relative;
     display: grid;
     justify-items: center;
     gap: 20px;
@@ -209,6 +263,8 @@ const nav = [
   }
 
   .sidebar-nav a, .nav-disabled {
+    position: relative;
+    z-index: 1;
     width: fit-content;
     min-width: 84px;
     padding: 2px 14px;
@@ -217,21 +273,36 @@ const nav = [
   }
 
   .sidebar-nav a {
-    transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    transition: color 180ms ease;
   }
 
-  .sidebar-nav a.is-active {
+  .section-indicator {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: var(--indicator-width, 0px);
+    height: var(--indicator-height, 0px);
     border-color: rgba(255, 255, 255, .16);
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 999px;
     background: rgba(255, 255, 255, .06);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 8px 18px rgba(80, 30, 6, .2);
     backdrop-filter: blur(16px) saturate(140%);
+    pointer-events: none;
+    transform: translate3d(var(--indicator-x, 0px), var(--indicator-y, 0px), 0);
   }
 
-  .sidebar-nav a:hover {
-    border-color: rgba(255, 255, 255, .14);
-    background: rgba(255, 255, 255, .05);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .16), 0 6px 14px rgba(80, 30, 6, .18);
-    transform: translateX(3px) translateY(-1px);
+  .section-indicator.is-ready {
+    transition: width 460ms cubic-bezier(.22, 1, .36, 1), height 460ms cubic-bezier(.22, 1, .36, 1), transform 460ms cubic-bezier(.22, 1, .36, 1);
+  }
+
+  :global(.liquid-glass-ready) .section-indicator { background: transparent !important; }
+
+  .sidebar-nav a:focus-visible, .mobile-nav-links a:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, .72);
+    outline-offset: 2px;
   }
 
   .nav-disabled { color: #fed3af; font-style: italic; cursor: not-allowed; }
@@ -265,28 +336,27 @@ const nav = [
     }
 
     .mobile-brand { font-size: 12px; }
-    .mobile-nav div { display: flex; gap: 6px; }
+    .mobile-nav-links { position: relative; display: flex; gap: 6px; }
 
-    .mobile-nav div a {
+    .mobile-nav-links a {
+      position: relative;
+      z-index: 1;
       padding: 4px 7px;
       border: 1px solid transparent;
       border-radius: 999px;
       font-size: 11px;
-      transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
-    }
-
-    .mobile-nav div a:hover, .mobile-nav div a.is-active {
-      border-color: rgba(255, 255, 255, .16);
-      background: rgba(255, 255, 255, .06);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 5px 12px rgba(80, 30, 6, .18);
-      transform: translateY(-1px);
+      transition: color 180ms ease;
     }
   }
 
   @media (max-width: 600px) {
     .mobile-nav { justify-content: center; }
     .mobile-brand { display: none; }
-    .mobile-nav div { width: 100%; justify-content: space-around; }
-    .mobile-nav div a { padding-right: 9px; padding-left: 9px; }
+    .mobile-nav-links { width: 100%; justify-content: space-around; }
+    .mobile-nav-links a { padding-right: 9px; padding-left: 9px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .section-indicator.is-ready { transition: none; }
   }
 </style>
