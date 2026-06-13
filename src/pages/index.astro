@@ -66,23 +66,61 @@ const socials = [
     });
   };
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      const id = (visible?.target as HTMLElement | undefined)?.dataset.pageSection;
-      if (id) setActiveSection(id);
-    },
-    { rootMargin: '-25% 0px -55%', threshold: [0, 0.2, 0.5] },
-  );
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
-  sections.forEach((section) => observer.observe(section));
-  sectionLinks.forEach((link) => {
-    link.addEventListener('click', () => {
-      const id = link.dataset.sectionLink;
-      if (id) setActiveSection(id);
+  const scrollToSection = (id: string, behavior: ScrollBehavior = 'smooth') => {
+    const section = document.querySelector<HTMLElement>(`[data-page-section="${id}"]`);
+    if (!section) return;
+    section.scrollIntoView({
+      behavior: reducedMotion.matches ? 'auto' : behavior,
+      block: 'start',
     });
+    setActiveSection(id);
+  };
+
+  const syncHashTarget = (behavior: ScrollBehavior = 'auto') => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (id) scrollToSection(id, behavior);
+  };
+
+  let sectionUpdateFrame = 0;
+
+  const updateActiveSection = () => {
+    sectionUpdateFrame = 0;
+    const activeLine = innerHeight * 0.35;
+    const activeSection = sections.reduce((active, section) => {
+      return section.getBoundingClientRect().top <= activeLine ? section : active;
+    }, sections[0]);
+    const id = activeSection?.dataset.pageSection;
+    if (id) setActiveSection(id);
+  };
+
+  const scheduleSectionUpdate = () => {
+    if (!sectionUpdateFrame) sectionUpdateFrame = requestAnimationFrame(updateActiveSection);
+  };
+
+  addEventListener('scroll', scheduleSectionUpdate, { passive: true });
+  addEventListener('resize', scheduleSectionUpdate);
+  scheduleSectionUpdate();
+
+  sectionLinks.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      const id = link.dataset.sectionLink;
+      if (!id) return;
+
+      event.preventDefault();
+      const hash = `#${id}`;
+      if (location.hash === hash) history.replaceState(null, '', hash);
+      else history.pushState(null, '', hash);
+      scrollToSection(id);
+    });
+  });
+
+  addEventListener('popstate', () => syncHashTarget());
+  addEventListener('pageshow', () => {
+    if (!location.hash) return;
+    requestAnimationFrame(() => syncHashTarget());
+    document.fonts?.ready.then(() => syncHashTarget());
   });
 </script>
 
