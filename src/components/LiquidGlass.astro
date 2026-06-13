@@ -263,7 +263,13 @@
 
         const observer = new ResizeObserver(requestDraw);
         document.querySelectorAll<HTMLElement>('[data-liquid-glass]').forEach((element) => observer.observe(element));
-        const mutationObserver = new MutationObserver(requestDraw);
+        const mutationObserver = new MutationObserver((mutations) => {
+          const affectsGlass = mutations.some((mutation) => {
+            if (mutation.attributeName === 'data-theme') return true;
+            return (mutation.target as HTMLElement).hasAttribute?.('data-liquid-glass');
+          });
+          if (affectsGlass) requestDraw();
+        });
         mutationObserver.observe(document.documentElement, { attributes: true, subtree: true, attributeFilter: ['class', 'hidden', 'data-theme'] });
         addEventListener('resize', requestDraw, { passive: true });
         addEventListener('scroll', requestDraw, { passive: true });
