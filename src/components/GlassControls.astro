@@ -4,13 +4,13 @@
     <button type="button" data-glass-close aria-label="Hide glass controls">&times;</button>
   </header>
 
-  <label>Refraction <input name="displacement" type="range" min="0" max="60" step="1" value="24" /><output>24</output></label>
-  <label>Bezel <input name="bezel" type="range" min="8" max="60" step="1" value="42" /><output>42</output></label>
-  <label>Tint <input name="tint" type="range" min="0" max="1" step="0.01" value="0.72" /><output>0.72</output></label>
-  <label>Specular <input name="specular" type="range" min="0" max="1" step="0.01" value="0.55" /><output>0.55</output></label>
-  <label>Shadow <input name="shadow" type="range" min="0" max="0.5" step="0.01" value="0.18" /><output>0.18</output></label>
-  <label>Edge color <input name="edgeOpacity" type="range" min="0" max="1" step="0.01" value="0.68" /><output>0.68</output></label>
-  <label>Center color <input name="centerOpacity" type="range" min="0" max="1" step="0.01" value="0.18" /><output>0.18</output></label>
+  <label>Refraction <input name="displacement" type="range" min="0" max="60" step="1" value="60" /><output>60</output></label>
+  <label>Bezel <input name="bezel" type="range" min="8" max="60" step="1" value="12" /><output>12</output></label>
+  <label>Tint <input name="tint" type="range" min="0" max="1" step="0.01" value="0.9" /><output>0.9</output></label>
+  <label>Specular <input name="specular" type="range" min="0" max="1" step="0.01" value="0.92" /><output>0.92</output></label>
+  <label>Shadow <input name="shadow" type="range" min="0" max="0.5" step="0.01" value="0.04" /><output>0.04</output></label>
+  <label>Edge color <input name="edgeOpacity" type="range" min="0" max="1" step="0.01" value="1" /><output>1</output></label>
+  <label>Center color <input name="centerOpacity" type="range" min="0" max="1" step="0.01" value="1" /><output>1</output></label>
 
   <footer>
     <button type="button" data-glass-reset>Reset</button>
@@ -22,26 +22,27 @@
 <script>
   const panel = document.querySelector<HTMLElement>('[data-glass-controls]');
   const openButton = document.querySelector<HTMLButtonElement>('[data-glass-open]');
+  const settingsKey = 'portfolio-glass-settings-v2';
   const defaults = {
-    displacement: 24,
-    bezel: 42,
-    tint: 0.72,
-    specular: 0.55,
-    shadow: 0.18,
-    edgeOpacity: 0.68,
-    centerOpacity: 0.18,
+    displacement: 60,
+    bezel: 12,
+    tint: 0.9,
+    specular: 0.92,
+    shadow: 0.04,
+    edgeOpacity: 1,
+    centerOpacity: 1,
   };
 
   if (panel && openButton) {
     const inputs = Array.from(panel.querySelectorAll<HTMLInputElement>('input[type="range"]'));
-    const saved = localStorage.getItem('portfolio-glass-settings');
+    const saved = localStorage.getItem(settingsKey);
     const settings = { ...defaults, ...(saved ? JSON.parse(saved) : {}) };
 
     const apply = () => {
       document.documentElement.style.setProperty('--glass-edge-opacity', String(settings.edgeOpacity));
       document.documentElement.style.setProperty('--glass-center-opacity', String(settings.centerOpacity));
       window.dispatchEvent(new CustomEvent('liquid-glass-settings', { detail: settings }));
-      localStorage.setItem('portfolio-glass-settings', JSON.stringify(settings));
+      localStorage.setItem(settingsKey, JSON.stringify(settings));
     };
 
     const syncInputs = () => {
