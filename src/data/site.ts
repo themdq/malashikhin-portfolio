@@ -103,7 +103,7 @@ export const interests = [
   'NBA',
   'Swimming',
   'Rollerblading',
-  'Electronic music',
+  'Indie music',
   'Coffee',
   'Books',
   'Films',
