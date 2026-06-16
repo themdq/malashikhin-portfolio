@@ -102,13 +102,13 @@
     gap: 13px;
     padding: 18px;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: var(--fs-xs);
   }
 
   .glass-controls[hidden] { display: none; }
   .glass-controls header, .glass-controls label, .glass-controls footer { display: flex; align-items: center; }
   .glass-controls header { justify-content: space-between; margin-bottom: 4px; }
-  .glass-controls header button { border: 0; background: transparent; color: inherit; font-size: 24px; cursor: pointer; }
+  .glass-controls header button { border: 0; background: transparent; color: inherit; font-size: var(--fs-title); cursor: pointer; }
   .glass-controls label { display: grid; grid-template-columns: 92px 1fr 40px; gap: 8px; }
   .glass-controls input { width: 100%; accent-color: #da702c; }
   .glass-controls output { color: rgba(255, 255, 255, .62); text-align: right; }

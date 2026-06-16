@@ -148,20 +148,20 @@ const socials = [
   .index-screen h1, .about-header h2, .contacts-header h2 {
     margin: 0;
     font-family: var(--serif);
-    font-size: clamp(76px, 5.35vw, 106px);
+    font-size: var(--fs-display);
     font-style: italic;
     font-weight: 400;
-    letter-spacing: -0.035em;
+    letter-spacing: 0;
     line-height: .95;
   }
 
-  .index-screen p { margin: 35px 0 0; color: var(--muted); font-size: 20px; white-space: nowrap; }
+  .index-screen p { margin: 35px 0 0; color: var(--muted); font-size: var(--fs-lg); white-space: nowrap; }
   :global(:root[data-theme='dark']) .index-screen p { color: var(--muted); }
   .index-screen p span { margin-right: 14px; }
   .about-screen { padding: 92px clamp(48px, 8vw, 150px) 56px; }
   .about-header { text-align: center; }
-  .about-header h2 { font-size: clamp(76px, 6.2vw, 120px); }
-  .about-header > p { margin: -5px 0 48px; font-size: clamp(24px, 2.15vw, 42px); }
+  .about-header h2 { font-size: var(--fs-display); }
+  .about-header > p { margin: -5px 0 48px; font-size: var(--fs-kicker); }
 
   .rule-title {
     display: flex;
@@ -172,7 +172,7 @@ const socials = [
     color: var(--muted);
   }
 
-  .rule-title span { font-size: 19px; font-style: normal; }
+  .rule-title span { font-size: var(--fs-md); font-style: normal; }
   .rule-title .rule-line { flex: 1; overflow: hidden; color: var(--line); letter-spacing: .08em; white-space: nowrap; }
   .contacts-screen {
     display: grid;
@@ -187,10 +187,10 @@ const socials = [
   }
   .contacts-header h2 {
     max-width: 100%;
-    font-size: clamp(70px, 5.4vw, 104px);
+    font-size: var(--fs-display);
     overflow-wrap: anywhere;
   }
-  .contacts-header p { max-width: 520px; margin: 8px auto 0; font-size: 17px; line-height: 1.35; }
+  .contacts-header p { max-width: 520px; margin: 8px auto 0; font-size: var(--fs-base); line-height: 1.35; }
   .contacts-header .rule-title { width: 100%; }
 
   .contact-connector {
@@ -202,7 +202,7 @@ const socials = [
     padding: 12px 0 8px;
     color: var(--muted);
     font-family: var(--mono);
-    font-size: 19px;
+    font-size: var(--fs-md);
     line-height: 1;
   }
 
@@ -271,7 +271,7 @@ const socials = [
     justify-self: center;
     overflow: hidden;
     color: var(--muted);
-    font-size: 17px;
+    font-size: var(--fs-base);
   }
   .contact-footer span { display: none; }
   .contact-footer a { flex: 0 0 auto; }
@@ -288,14 +288,14 @@ const socials = [
     .single-page { width: 100%; margin-inline: 0; }
     .page-section { scroll-margin-top: 124px; }
     .index-screen { padding: 100px 24px 40px; }
-    .index-screen h1 { max-width: 100%; font-size: clamp(48px, 12.5vw, 72px); line-height: .98; white-space: normal; }
-    .index-screen p { font-size: 16px; white-space: normal; }
+    .index-screen h1 { max-width: 100%; font-size: var(--fs-display-mobile); line-height: .98; white-space: normal; }
+    .index-screen p { font-size: var(--fs-base); white-space: normal; }
     .about-screen { padding: 168px 18px 40px; }
-    .about-header h2 { font-size: clamp(58px, 15vw, 86px); }
-    .about-header > p { margin-bottom: 34px; font-size: clamp(18px, 5vw, 28px); }
+    .about-header h2 { font-size: var(--fs-display-mobile); }
+    .about-header > p { margin-bottom: 34px; font-size: var(--fs-lg); }
     .contacts-screen { padding: 160px 18px 24px; }
-    .contacts-header h2 { font-size: clamp(56px, 16vw, 78px); }
-    .contacts-header p { font-size: 14px; }
+    .contacts-header h2 { font-size: var(--fs-display-mobile); }
+    .contacts-header p { font-size: var(--fs-sm); }
     .contact-connector { min-height: 56px; padding-top: 8px; }
     .social-dock {
       --social-dock-gap: clamp(10px, 3vw, 14px);
@@ -309,7 +309,7 @@ const socials = [
     }
     .contact-footer {
       gap: 0;
-      font-size: 12px;
+      font-size: var(--fs-xs);
     }
   }
 </style>

@@ -18,6 +18,15 @@
   --glass-shadow: rgba(84, 66, 44, .16);
   --serif: 'Instrument Serif', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
   --mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+  --fs-xs: 12px;
+  --fs-sm: 14px;
+  --fs-base: 16px;
+  --fs-md: 18px;
+  --fs-lg: 20px;
+  --fs-title: 24px;
+  --fs-kicker: clamp(20px, 1.55vw, 28px);
+  --fs-display: clamp(72px, 5.4vw, 104px);
+  --fs-display-mobile: clamp(50px, 14vw, 76px);
   --rail-left: clamp(28px, 1.55vw, 32px);
   --rail-width: clamp(224px, 12vw, 240px);
 }
