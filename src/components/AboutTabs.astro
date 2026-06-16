@@ -211,7 +211,7 @@ const tabs = [
   .experience-item { padding: 22px 6px 30px; }
   .experience-item + .experience-item { border-top: 1px dashed var(--line); }
   .experience-heading { display: flex; justify-content: space-between; gap: 24px; }
-  .experience-heading div { display: grid; }
+  .experience-heading div { display: grid; min-width: 0; }
   .experience-heading strong { font-family: var(--serif); font-weight: 400; font-size: var(--fs-title); }
   .experience-heading time::before { content: '// '; }
   .experience-item p { margin: 20px 0 0; font-size: var(--fs-sm); }
@@ -257,10 +257,25 @@ const tabs = [
     .tab-list button { flex: 0 0 auto; padding-right: 8px; padding-left: 8px; font-size: var(--fs-sm); }
     .tab-panel { border-radius: 28px; }
     .prose-panel, .experience-panel { padding: 26px 22px; }
-    .experience-heading { display: grid; }
+    .experience-heading {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: 14px;
+      row-gap: 2px;
+      align-items: baseline;
+    }
+    .experience-heading div { display: contents; }
+    .experience-heading strong { grid-column: 1; min-width: 0; }
+    .experience-heading span { grid-column: 1 / -1; min-width: 0; }
+    .experience-heading time {
+      grid-column: 2;
+      grid-row: 1;
+      white-space: nowrap;
+      font-size: var(--fs-xs);
+    }
     .skills-panel { grid-template-columns: 1fr; }
     .skills-panel article + article { border-top: 1px dashed var(--line); border-left: 0; }
-    .education-panel article { display: grid; }
+    .education-panel article { display: grid; gap: 6px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
