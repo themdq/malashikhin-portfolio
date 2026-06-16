@@ -67,41 +67,6 @@ body {
 
 .page-shell { position: relative; isolation: isolate; }
 
-.liquid-glass-ready body { background: transparent; }
-
-[data-liquid-glass] {
-  isolation: isolate;
-  transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
-}
-
-.liquid-glass-ready [data-liquid-glass]:not([data-liquid-glass-active]),
-.liquid-glass-ready [data-liquid-glass-active].is-active {
-  background: transparent !important;
-  border-color: color-mix(in srgb, white 28%, transparent) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .28), 0 14px 30px rgba(50, 35, 20, .1) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.liquid-glass-ready [data-liquid-glass='amber'] {
-  background:
-    linear-gradient(90deg, rgba(255, 255, 255, .1), transparent 18%, transparent 82%, rgba(92, 24, 3, .12)),
-    linear-gradient(
-      180deg,
-      rgba(126, 39, 7, var(--glass-edge-opacity, 1)) 0%,
-      rgba(188, 82, 21, .44) 22%,
-      rgba(247, 145, 67, var(--glass-center-opacity, 1)) 50%,
-      rgba(188, 82, 21, .44) 78%,
-      rgba(126, 39, 7, var(--glass-edge-opacity, 1)) 100%
-    ) !important;
-}
-
-:root[data-theme='dark'].liquid-glass-ready [data-liquid-glass]:not([data-liquid-glass-active]),
-:root[data-theme='dark'].liquid-glass-ready [data-liquid-glass-active].is-active {
-  border-color: rgba(255, 252, 240, .18) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 252, 240, .16), 0 16px 34px rgba(0, 0, 0, .28) !important;
-}
-
 a { color: inherit; text-decoration: none; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { font: inherit; }

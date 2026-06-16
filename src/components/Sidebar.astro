@@ -15,10 +15,9 @@ const nav = [
   aria-expanded="false"
   aria-label="Open navigation"
   data-sidebar-toggle
-  data-liquid-glass="amber"
 >[dm]</button>
 
-<aside class="sidebar" id="top" aria-hidden="true" inert hidden data-sidebar data-liquid-glass="amber">
+<aside class="sidebar" id="top" aria-hidden="true" inert hidden data-sidebar>
   <button class="sidebar-close" type="button" aria-label="Close navigation" data-sidebar-close>[X]</button>
   <nav class="sidebar-nav" aria-label="Primary navigation" data-section-nav>
     <span class="section-indicator" aria-hidden="true" data-section-indicator></span>
@@ -34,36 +33,13 @@ const nav = [
   <a class="sidebar-brand" href="#index" aria-label={`${site.name}, home`}>d@malashikh.in ~</a>
 </aside>
 
-<nav class="mobile-nav" aria-label="Mobile navigation">
-  <a class="mobile-brand" href="#index">d@malashikh.in ~</a>
-  <div class="mobile-nav-links" data-section-nav>
-    <span class="section-indicator" aria-hidden="true" data-section-indicator data-liquid-glass="amber"></span>
-    {nav.map((item) => (
-      <a class:list={{ 'is-active': item.key === 'index' }} href={item.href} data-section-link={item.key}>
-        {item.label}
-      </a>
-    ))}
-  </div>
-</nav>
-
 <script>
   const sidebar = document.querySelector<HTMLElement>('[data-sidebar]');
   const toggle = document.querySelector<HTMLButtonElement>('[data-sidebar-toggle]');
   const close = document.querySelector<HTMLButtonElement>('[data-sidebar-close]');
   const sidebarIndicator = sidebar?.querySelector<HTMLElement>('[data-section-indicator]');
   const sectionNavs = Array.from(document.querySelectorAll<HTMLElement>('[data-section-nav]'));
-  let indicatorAnimationFrame = 0;
   let indicatorUpdateFrame = 0;
-
-  const redrawGlassDuringTransition = () => {
-    cancelAnimationFrame(indicatorAnimationFrame);
-    const startedAt = performance.now();
-    const redraw = (now: number) => {
-      dispatchEvent(new CustomEvent('liquid-glass-update'));
-      if (now - startedAt < 520) indicatorAnimationFrame = requestAnimationFrame(redraw);
-    };
-    indicatorAnimationFrame = requestAnimationFrame(redraw);
-  };
 
   const moveSectionIndicator = (nav: HTMLElement, animate: boolean) => {
     const indicator = nav.querySelector<HTMLElement>('[data-section-indicator]');
@@ -79,8 +55,6 @@ const nav = [
 
   const updateSectionIndicators = (animate: boolean) => {
     sectionNavs.forEach((nav) => moveSectionIndicator(nav, animate));
-    dispatchEvent(new CustomEvent('liquid-glass-update'));
-    if (animate && !matchMedia('(prefers-reduced-motion: reduce)').matches) redrawGlassDuringTransition();
   };
 
   const scheduleIndicatorUpdate = (animate: boolean) => {
@@ -102,6 +76,7 @@ const nav = [
 
   if (sidebar && toggle) {
     let transitionTimer = 0;
+    const mobileSidebar = matchMedia('(max-width: 780px)');
 
     const setSidebarOpen = (open: boolean) => {
       const restoreToggleFocus = sidebar.contains(document.activeElement);
@@ -126,7 +101,6 @@ const nav = [
       }
 
       if (sidebarIndicator) sidebarIndicator.hidden = true;
-      dispatchEvent(new CustomEvent('liquid-glass-update'));
       document.documentElement.classList.remove('sidebar-open');
       const duration = matchMedia('(prefers-reduced-motion: reduce)').matches ? 20 : 340;
       transitionTimer = window.setTimeout(() => {
@@ -145,6 +119,12 @@ const nav = [
       setSidebarOpen(false);
     });
 
+    sidebar.querySelectorAll<HTMLAnchorElement>('[data-section-link]').forEach((link) => {
+      link.addEventListener('click', () => {
+        if (mobileSidebar.matches) setSidebarOpen(false);
+      });
+    });
+
     addEventListener('keydown', (event) => {
       if (event.key === 'Escape') setSidebarOpen(false);
     });
@@ -158,7 +138,7 @@ const nav = [
     position: fixed;
     top: 28px;
     left: var(--rail-left);
-    z-index: 120;
+    z-index: 1000;
     display: grid;
     width: 64px;
     height: 52px;
@@ -180,13 +160,28 @@ const nav = [
     transform: translateY(-2px);
   }
 
+  :global(:root[data-theme='dark']) .sidebar-toggle {
+    border-color: rgba(255, 252, 240, .18);
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--orange-deep) 76%, var(--page)),
+      color-mix(in srgb, var(--orange-deep) 52%, var(--page))
+    );
+    box-shadow: inset 0 1px 0 rgba(255, 252, 240, .16), 0 12px 28px rgba(0, 0, 0, .42);
+  }
+
+  :global(:root[data-theme='dark']) .sidebar-toggle:hover {
+    border-color: rgba(255, 252, 240, .28);
+    box-shadow: inset 0 1px 0 rgba(255, 252, 240, .22), 0 15px 32px rgba(0, 0, 0, .5);
+  }
+
   .sidebar-toggle[hidden] { display: none; }
 
   .sidebar {
     position: fixed;
     top: 28px;
     left: var(--rail-left);
-    z-index: 120;
+    z-index: 1010;
     display: flex;
     width: 64px;
     height: 52px;
@@ -208,6 +203,8 @@ const nav = [
     transition:
       width 340ms cubic-bezier(.22, 1, .36, 1),
       height 340ms cubic-bezier(.22, 1, .36, 1),
+      top 340ms cubic-bezier(.22, 1, .36, 1),
+      left 340ms cubic-bezier(.22, 1, .36, 1),
       padding 340ms cubic-bezier(.22, 1, .36, 1),
       border-radius 340ms cubic-bezier(.22, 1, .36, 1);
   }
@@ -218,6 +215,20 @@ const nav = [
     padding: 36px 32px 30px;
     border-radius: 40px;
     pointer-events: auto;
+  }
+
+  :global(:root[data-theme='dark']) .sidebar {
+    border-color: color-mix(in srgb, var(--orange-deep) 74%, var(--page));
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--orange-deep) 64%, var(--page)) 0%,
+        color-mix(in srgb, var(--orange) 58%, var(--page)) 50.07%,
+        color-mix(in srgb, var(--orange-deep) 64%, var(--page)) 100%
+      ),
+      linear-gradient(0deg, color-mix(in srgb, var(--orange-deep) 58%, var(--page)), color-mix(in srgb, var(--orange-deep) 58%, var(--page)));
+    background-blend-mode: normal, normal;
+    box-shadow: 0 12px 44px rgba(0, 0, 0, .38);
   }
 
   .sidebar[hidden] { display: none; }
@@ -302,62 +313,68 @@ const nav = [
     transition: width 460ms cubic-bezier(.22, 1, .36, 1), height 460ms cubic-bezier(.22, 1, .36, 1), transform 460ms cubic-bezier(.22, 1, .36, 1);
   }
 
-  :global(.liquid-glass-ready) .section-indicator { background: transparent !important; }
-
-  .sidebar-nav a:focus-visible, .mobile-nav-links a:focus-visible {
+  .sidebar-nav a:focus-visible {
     outline: 2px solid rgba(255, 255, 255, .72);
     outline-offset: 2px;
   }
 
   .nav-disabled { color: #fed3af; font-style: italic; cursor: not-allowed; }
-  .mobile-nav { display: none; }
 
   @media (max-width: 1020px) {
     :global(.sidebar-open) .sidebar { padding-right: 28px; padding-left: 28px; }
   }
 
   @media (max-width: 780px) {
-    .sidebar, .sidebar-toggle { display: none; }
-
-    .mobile-nav {
-      position: fixed;
+    .sidebar-toggle {
       top: 14px;
-      right: 74px;
       left: 14px;
-      z-index: 120;
-      display: flex;
-      min-height: 54px;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 10px 14px;
-      border: 1px solid rgba(255, 252, 240, .28);
-      border-radius: 20px;
-      background: linear-gradient(180deg, rgba(218, 112, 44, .94), rgba(188, 82, 21, .92));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .26), 0 12px 24px var(--shadow);
-      color: var(--on-orange);
-      backdrop-filter: blur(18px) saturate(135%);
+      width: 58px;
+      height: 50px;
+      border-radius: 18px;
     }
 
-    .mobile-brand { font-size: var(--fs-xs); }
-    .mobile-nav-links { position: relative; display: flex; gap: 6px; }
+    .sidebar {
+      top: 14px;
+      left: 14px;
+      width: 58px;
+      height: 50px;
+      border-radius: 18px;
+    }
 
-    .mobile-nav-links a {
-      position: relative;
-      z-index: 1;
-      padding: 4px 7px;
-      border: 1px solid transparent;
-      border-radius: 999px;
-      font-size: var(--fs-xs);
-      transition: color 180ms ease;
+    :global(.sidebar-open) {
+      overflow: hidden;
+    }
+
+    :global(.sidebar-open) .sidebar {
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100dvh;
+      padding: 82px 26px 34px;
+      border-radius: 0;
+    }
+
+    .sidebar-close {
+      top: 22px;
+      left: 22px;
+    }
+
+    .sidebar-nav {
+      gap: 22px;
+      margin-top: clamp(72px, 18vh, 150px);
+      font-size: var(--fs-md);
+    }
+
+    .sidebar-brand {
+      align-self: center;
     }
   }
 
   @media (max-width: 600px) {
-    .mobile-nav { justify-content: center; }
-    .mobile-brand { display: none; }
-    .mobile-nav-links { width: 100%; justify-content: space-around; }
-    .mobile-nav-links a { padding-right: 9px; padding-left: 9px; }
+    :global(.sidebar-open) .sidebar {
+      padding-right: 22px;
+      padding-left: 22px;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
