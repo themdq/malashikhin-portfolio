@@ -13,6 +13,9 @@ if (existsSync(nodeModulesPath)) {
 export default defineConfig({
   site: 'https://malashikh.in',
   output: 'static',
+  devToolbar: {
+    enabled: false,
+  },
   build: {
     format: 'directory',
   },

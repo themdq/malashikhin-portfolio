@@ -34,13 +34,26 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; background: var(--page); }
+html {
+  overflow-x: hidden;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+  background: var(--page);
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
 
 body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
   overflow-x: hidden;
+  scrollbar-width: none;
   background:
     radial-gradient(circle at 14% 52%, color-mix(in srgb, var(--orange) 7%, transparent), transparent 28%),
     var(--page);
