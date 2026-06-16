@@ -11,8 +11,8 @@ const tabs = [
 ---
 
 <div class="about-tabs" data-tabs>
-  <div class="tab-list" role="tablist" aria-label="About Dmitrii" data-liquid-glass="clear">
-    <span class="tab-indicator" aria-hidden="true" data-tab-indicator data-liquid-glass="accent"></span>
+  <div class="tab-list" role="tablist" aria-label="About Dmitrii">
+    <span class="tab-indicator" aria-hidden="true" data-tab-indicator></span>
     {tabs.map((tab, index) => (
       <button
         id={`tab-${tab.id}`}
@@ -29,7 +29,7 @@ const tabs = [
     ))}
   </div>
 
-  <section class="tab-panel prose-panel" id="panel-background" role="tabpanel" aria-labelledby="tab-background" data-panel="background" data-liquid-glass="clear">
+  <section class="tab-panel prose-panel" id="panel-background" role="tabpanel" aria-labelledby="tab-background" data-panel="background">
     <p>
       I’m Dmitrii Malashikhin, a data and pipeline engineer based in {site.location}. I build and operate data
       integrations end-to-end, from researching sources and writing Python connectors to designing ETL pipelines,
@@ -46,7 +46,7 @@ const tabs = [
     </p>
   </section>
 
-  <section class="tab-panel experience-panel" id="panel-experience" role="tabpanel" aria-labelledby="tab-experience" data-panel="experience" data-liquid-glass="clear" hidden>
+  <section class="tab-panel experience-panel" id="panel-experience" role="tabpanel" aria-labelledby="tab-experience" data-panel="experience" hidden>
     {experience.map((item) => (
       <article class="experience-item">
         <div class="experience-heading">
@@ -58,7 +58,7 @@ const tabs = [
     ))}
   </section>
 
-  <section class="tab-panel education-panel" id="panel-education" role="tabpanel" aria-labelledby="tab-education" data-panel="education" data-liquid-glass="clear" hidden>
+  <section class="tab-panel education-panel" id="panel-education" role="tabpanel" aria-labelledby="tab-education" data-panel="education" hidden>
     {education.map((school) => (
     <article>
       <h2>{school.degree}</h2>
@@ -67,7 +67,7 @@ const tabs = [
     ))}
   </section>
 
-  <section class="tab-panel skills-panel" id="panel-skills" role="tabpanel" aria-labelledby="tab-skills" data-panel="skills" data-liquid-glass="clear" hidden>
+  <section class="tab-panel skills-panel" id="panel-skills" role="tabpanel" aria-labelledby="tab-skills" data-panel="skills" hidden>
     {capabilities.map((group) => (
       <article>
         <h2>{group.title}</h2>
@@ -76,7 +76,7 @@ const tabs = [
     ))}
   </section>
 
-  <section class="tab-panel interests-panel" id="panel-interests" role="tabpanel" aria-labelledby="tab-interests" data-panel="interests" data-liquid-glass="clear" hidden>
+  <section class="tab-panel interests-panel" id="panel-interests" role="tabpanel" aria-labelledby="tab-interests" data-panel="interests" hidden>
     {interests.map((item) => <span>{item}</span>)}
   </section>
 </div>
@@ -86,17 +86,6 @@ const tabs = [
   const tabButtons = Array.from(tabRoot?.querySelectorAll<HTMLButtonElement>('[role="tab"]') ?? []);
   const panels = Array.from(tabRoot?.querySelectorAll<HTMLElement>('[role="tabpanel"]') ?? []);
   const indicator = tabRoot?.querySelector<HTMLElement>('[data-tab-indicator]');
-  let glassAnimationFrame = 0;
-
-  const redrawGlassDuringTransition = () => {
-    cancelAnimationFrame(glassAnimationFrame);
-    const startedAt = performance.now();
-    const redraw = (now: number) => {
-      dispatchEvent(new CustomEvent('liquid-glass-update'));
-      if (now - startedAt < 520) glassAnimationFrame = requestAnimationFrame(redraw);
-    };
-    glassAnimationFrame = requestAnimationFrame(redraw);
-  };
 
   const moveIndicator = (button: HTMLButtonElement, animate = true) => {
     if (!indicator) return;
@@ -106,8 +95,6 @@ const tabs = [
     indicator.style.setProperty('--indicator-width', `${button.offsetWidth}px`);
     indicator.style.setProperty('--indicator-height', `${button.offsetHeight}px`);
     if (!animate) requestAnimationFrame(() => indicator.classList.add('is-ready'));
-    dispatchEvent(new CustomEvent('liquid-glass-update'));
-    if (animate && !matchMedia('(prefers-reduced-motion: reduce)').matches) redrawGlassDuringTransition();
   };
 
   const activateTab = (id: string | undefined, animate = true) => {
@@ -180,13 +167,9 @@ const tabs = [
     transition: width 460ms cubic-bezier(.22, 1, .36, 1), height 460ms cubic-bezier(.22, 1, .36, 1), transform 460ms cubic-bezier(.22, 1, .36, 1);
   }
 
-  :global(.liquid-glass-ready) .tab-indicator { background: transparent; }
-
   :global(:root[data-theme='dark']) .tab-indicator {
     background: linear-gradient(180deg, rgba(218, 112, 44, .34), rgba(64, 32, 13, .7));
   }
-
-  :global(:root[data-theme='dark'].liquid-glass-ready) .tab-indicator { background: transparent; }
 
   .tab-list button {
     position: relative;
