@@ -30,7 +30,7 @@ for (const asset of localAssets) {
   if (!existsSync(join(dist.pathname, asset))) throw new Error(`Missing local asset: ${asset}`);
 }
 
-for (const file of ['_headers', '_redirects', 'Dmitrii_Malashikhin_Data_Engineer_Resume.pdf', 'og.png']) {
+for (const file of ['_headers', '_redirects', 'Dmitrii_Malashikhin_Data_Engineer_Resume.pdf', 'og.png', 'server/index.js']) {
   if (!existsSync(new URL(file, dist))) throw new Error(`Missing deployment artifact: ${file}`);
 }
 
