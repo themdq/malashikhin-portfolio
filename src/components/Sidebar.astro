@@ -3,381 +3,134 @@ import { site } from '@/data/site';
 
 const nav = [
   { key: 'index', label: 'Index', href: '#index' },
+  { key: 'work', label: 'Work', href: '#work' },
   { key: 'about', label: 'About', href: '#about' },
-  { key: 'contacts', label: 'Contacts', href: '#contacts' },
+  { key: 'contacts', label: 'Contact', href: '#contacts' },
 ] as const;
 ---
 
-<button
-  class="sidebar-toggle"
-  type="button"
-  aria-controls="top"
-  aria-expanded="false"
-  aria-label="Open navigation"
-  data-sidebar-toggle
->[dm]</button>
+<header class="site-header" id="top">
+  <a class="identity" href="#index" aria-label={`${site.name}, home`}>
+    <span>&gt;_</span>
+    <strong>Dmitrii Malashikhin</strong>
+    <small>/ Data Engineer</small>
+  </a>
 
-<aside class="sidebar" id="top" aria-hidden="true" inert hidden data-sidebar>
-  <button class="sidebar-close" type="button" aria-label="Close navigation" data-sidebar-close>[X]</button>
-  <nav class="sidebar-nav" aria-label="Primary navigation" data-section-nav>
-    <span class="section-indicator" aria-hidden="true" data-section-indicator></span>
+  <nav class="site-nav" aria-label="Primary navigation" data-section-nav>
     {nav.map((item) => (
       <a class:list={{ 'is-active': item.key === 'index' }} href={item.href} data-section-link={item.key}>
         {item.label}
       </a>
     ))}
-    <span class="nav-disabled" aria-disabled="true">/*Projects*/</span>
-    <span class="nav-disabled" aria-disabled="true">/*Articles*/</span>
-    <a href={site.resume} target="_blank">Resume</a>
   </nav>
-  <a class="sidebar-brand" href="#index" aria-label={`${site.name}, home`}>d@malashikh.in ~</a>
-</aside>
 
-<script>
-  const sidebar = document.querySelector<HTMLElement>('[data-sidebar]');
-  const toggle = document.querySelector<HTMLButtonElement>('[data-sidebar-toggle]');
-  const close = document.querySelector<HTMLButtonElement>('[data-sidebar-close]');
-  const sidebarIndicator = sidebar?.querySelector<HTMLElement>('[data-section-indicator]');
-  const sectionNavs = Array.from(document.querySelectorAll<HTMLElement>('[data-section-nav]'));
-  let indicatorUpdateFrame = 0;
-
-  const moveSectionIndicator = (nav: HTMLElement, animate: boolean) => {
-    const indicator = nav.querySelector<HTMLElement>('[data-section-indicator]');
-    const activeLink = nav.querySelector<HTMLElement>('[data-section-link].is-active');
-    if (!indicator || !activeLink) return;
-    indicator.classList.toggle('is-ready', animate);
-    indicator.style.setProperty('--indicator-x', `${activeLink.offsetLeft}px`);
-    indicator.style.setProperty('--indicator-y', `${activeLink.offsetTop}px`);
-    indicator.style.setProperty('--indicator-width', `${activeLink.offsetWidth}px`);
-    indicator.style.setProperty('--indicator-height', `${activeLink.offsetHeight}px`);
-    if (!animate) requestAnimationFrame(() => indicator.classList.add('is-ready'));
-  };
-
-  const updateSectionIndicators = (animate: boolean) => {
-    sectionNavs.forEach((nav) => moveSectionIndicator(nav, animate));
-  };
-
-  const scheduleIndicatorUpdate = (animate: boolean) => {
-    cancelAnimationFrame(indicatorUpdateFrame);
-    indicatorUpdateFrame = requestAnimationFrame(() => updateSectionIndicators(animate));
-  };
-
-  const activeSectionObserver = new MutationObserver((mutations) => {
-    if (mutations.some((mutation) => (mutation.target as HTMLElement).hasAttribute('data-section-link'))) {
-      scheduleIndicatorUpdate(true);
-    }
-  });
-  const sectionNavResizeObserver = new ResizeObserver(() => scheduleIndicatorUpdate(false));
-  sectionNavs.forEach((nav) => {
-    activeSectionObserver.observe(nav, { attributes: true, subtree: true, attributeFilter: ['class'] });
-    sectionNavResizeObserver.observe(nav);
-  });
-  scheduleIndicatorUpdate(false);
-
-  if (sidebar && toggle) {
-    let transitionTimer = 0;
-    const mobileSidebar = matchMedia('(max-width: 780px)');
-
-    const setSidebarOpen = (open: boolean) => {
-      const restoreToggleFocus = sidebar.contains(document.activeElement);
-      clearTimeout(transitionTimer);
-      sidebar.setAttribute('aria-hidden', String(!open));
-      sidebar.inert = !open;
-      toggle.setAttribute('aria-expanded', String(open));
-      toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
-
-      if (open) {
-        document.documentElement.classList.remove('sidebar-closed');
-        sidebar.hidden = false;
-        if (sidebarIndicator) sidebarIndicator.hidden = false;
-        toggle.hidden = true;
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            document.documentElement.classList.add('sidebar-open');
-            scheduleIndicatorUpdate(false);
-          });
-        });
-        return;
-      }
-
-      if (sidebarIndicator) sidebarIndicator.hidden = true;
-      document.documentElement.classList.remove('sidebar-open');
-      const duration = matchMedia('(prefers-reduced-motion: reduce)').matches ? 20 : 340;
-      transitionTimer = window.setTimeout(() => {
-        sidebar.hidden = true;
-        toggle.hidden = false;
-        document.documentElement.classList.add('sidebar-closed');
-        if (restoreToggleFocus) toggle.focus();
-      }, duration);
-    };
-
-    toggle.addEventListener('click', () => {
-      setSidebarOpen(!document.documentElement.classList.contains('sidebar-open'));
-    });
-
-    close?.addEventListener('click', () => {
-      setSidebarOpen(false);
-    });
-
-    sidebar.querySelectorAll<HTMLAnchorElement>('[data-section-link]').forEach((link) => {
-      link.addEventListener('click', () => {
-        if (mobileSidebar.matches) setSidebarOpen(false);
-      });
-    });
-
-    addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') setSidebarOpen(false);
-    });
-
-    setSidebarOpen(false);
-  }
-</script>
+  <div class="header-meta">
+    <span class="availability">New York / EDT</span>
+    <a class="resume-link" href={site.resume} target="_blank">Resume ↗</a>
+  </div>
+</header>
 
 <style>
-  .sidebar-toggle {
-    position: fixed;
-    top: 28px;
-    left: var(--rail-left);
+  .site-header {
+    position: sticky;
+    top: 0;
     z-index: 1000;
     display: grid;
-    width: 64px;
-    height: 52px;
-    place-items: center;
-    padding: 0;
-    border: 1px solid rgba(255, 252, 240, .34);
-    border-radius: 19px;
-    background: linear-gradient(145deg, rgba(232, 121, 47, .95), rgba(157, 67, 16, .92));
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .3), 0 12px 28px rgba(80, 30, 6, .24);
-    color: var(--on-orange);
-    cursor: pointer;
-    backdrop-filter: blur(18px) saturate(145%);
-    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    min-height: var(--header-height);
+    grid-template-columns: minmax(260px, 1fr) auto minmax(260px, 1fr);
+    align-items: center;
+    gap: 24px;
+    padding: 10px 94px 10px var(--gutter);
+    border-bottom: 1px solid var(--line-strong);
+    background: color-mix(in srgb, var(--page) 92%, transparent);
+    backdrop-filter: blur(14px);
   }
 
-  .sidebar-toggle:hover {
-    border-color: rgba(255, 252, 240, .52);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .38), 0 15px 32px rgba(80, 30, 6, .28);
-    transform: translateY(-2px);
-  }
-
-  :global(:root[data-theme='dark']) .sidebar-toggle {
-    border-color: rgba(255, 252, 240, .18);
-    background: linear-gradient(
-      145deg,
-      color-mix(in srgb, var(--orange-deep) 76%, var(--page)),
-      color-mix(in srgb, var(--orange-deep) 52%, var(--page))
-    );
-    box-shadow: inset 0 1px 0 rgba(255, 252, 240, .16), 0 12px 28px rgba(0, 0, 0, .42);
-  }
-
-  :global(:root[data-theme='dark']) .sidebar-toggle:hover {
-    border-color: rgba(255, 252, 240, .28);
-    box-shadow: inset 0 1px 0 rgba(255, 252, 240, .22), 0 15px 32px rgba(0, 0, 0, .5);
-  }
-
-  .sidebar-toggle[hidden] { display: none; }
-
-  .sidebar {
-    position: fixed;
-    top: 28px;
-    left: var(--rail-left);
-    z-index: 1010;
+  .identity {
     display: flex;
-    width: 64px;
-    height: 52px;
-    flex-direction: column;
-    overflow: hidden;
-    padding: 0;
-    border: 1px solid var(--orange);
-    border-radius: 19px;
-    background:
-      linear-gradient(180deg, #bc5215 0%, #da702c 50.07%, #bc5215 100%),
-      linear-gradient(0deg, #da702c, #da702c),
-      linear-gradient(0deg, #999, #999),
-      linear-gradient(0deg, #fff, #fff),
-      rgba(255, 255, 255, .75);
-    background-blend-mode: normal, plus-darker, overlay, saturation, normal;
-    box-shadow: 0 8px 40px rgba(0, 0, 0, .12);
-    color: var(--on-orange);
-    pointer-events: none;
-    transition:
-      width 340ms cubic-bezier(.22, 1, .36, 1),
-      height 340ms cubic-bezier(.22, 1, .36, 1),
-      top 340ms cubic-bezier(.22, 1, .36, 1),
-      left 340ms cubic-bezier(.22, 1, .36, 1),
-      padding 340ms cubic-bezier(.22, 1, .36, 1),
-      border-radius 340ms cubic-bezier(.22, 1, .36, 1);
+    min-width: 0;
+    align-items: baseline;
+    gap: 9px;
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
   }
 
-  :global(.sidebar-open) .sidebar {
-    width: var(--rail-width);
-    height: calc(100vh - 56px);
-    padding: 36px 32px 30px;
-    border-radius: 40px;
-    pointer-events: auto;
-  }
+  .identity span { color: var(--orange); font-size: 16px; }
+  .identity strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .identity small { color: var(--muted); font: inherit; white-space: nowrap; }
 
-  :global(:root[data-theme='dark']) .sidebar {
-    border-color: color-mix(in srgb, var(--orange-deep) 74%, var(--page));
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--orange-deep) 64%, var(--page)) 0%,
-        color-mix(in srgb, var(--orange) 58%, var(--page)) 50.07%,
-        color-mix(in srgb, var(--orange-deep) 64%, var(--page)) 100%
-      ),
-      linear-gradient(0deg, color-mix(in srgb, var(--orange-deep) 58%, var(--page)), color-mix(in srgb, var(--orange-deep) 58%, var(--page)));
-    background-blend-mode: normal, normal;
-    box-shadow: 0 12px 44px rgba(0, 0, 0, .38);
-  }
+  .site-nav { display: flex; align-items: center; gap: 2px; }
 
-  .sidebar[hidden] { display: none; }
-
-  .sidebar-close {
-    position: absolute;
-    top: 30px;
-    left: 30px;
-    padding: 4px 7px;
+  .site-nav a, .resume-link {
+    display: inline-flex;
+    min-height: 34px;
+    align-items: center;
+    padding: 5px 10px;
     border: 1px solid transparent;
-    border-radius: 10px;
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-    opacity: 0;
-    transition: background-color 180ms ease, border-color 180ms ease, opacity 140ms ease, transform 180ms ease;
+    border-radius: 4px;
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
   }
 
-  .sidebar-close:hover {
-    border-color: rgba(255, 255, 255, .16);
-    background: rgba(255, 255, 255, .08);
-    transform: translateY(-1px);
+  .site-nav a:hover, .site-nav a.is-active, .resume-link:hover {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--page);
   }
 
-  .sidebar-brand { margin-top: auto; white-space: nowrap; }
+  .site-nav a.is-active::before { content: '['; color: var(--orange); }
+  .site-nav a.is-active::after { content: ']'; color: var(--orange); }
 
-  .sidebar-brand, .sidebar-nav {
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 150ms ease, transform 200ms ease;
+  .header-meta {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
   }
 
-  :global(.sidebar-open) .sidebar-close,
-  :global(.sidebar-open) .sidebar-brand,
-  :global(.sidebar-open) .sidebar-nav {
-    opacity: 1;
-    transform: translateY(0);
-    transition-delay: 130ms;
+  .availability {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--muted);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    white-space: nowrap;
   }
 
-  .sidebar-nav {
-    position: relative;
-    display: grid;
-    justify-items: center;
-    gap: 20px;
-    margin-top: min(31vh, 320px);
+  .availability::before {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--orange);
+    content: '';
   }
 
-  .sidebar-nav a, .nav-disabled {
-    position: relative;
-    z-index: 1;
-    width: fit-content;
-    min-width: 84px;
-    padding: 2px 14px;
-    border: 1px solid transparent;
-    border-radius: 999px;
-  }
-
-  .sidebar-nav a {
-    transition: color 180ms ease;
-  }
-
-  .section-indicator {
-    position: absolute;
-    z-index: 0;
-    top: 0;
-    left: 0;
-    width: var(--indicator-width, 0px);
-    height: var(--indicator-height, 0px);
-    border-color: rgba(255, 255, 255, .16);
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, .06);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 8px 18px rgba(80, 30, 6, .2);
-    backdrop-filter: blur(16px) saturate(140%);
-    pointer-events: none;
-    transform: translate3d(var(--indicator-x, 0px), var(--indicator-y, 0px), 0);
-  }
-
-  .section-indicator.is-ready {
-    transition: width 460ms cubic-bezier(.22, 1, .36, 1), height 460ms cubic-bezier(.22, 1, .36, 1), transform 460ms cubic-bezier(.22, 1, .36, 1);
-  }
-
-  .sidebar-nav a:focus-visible {
-    outline: 2px solid rgba(255, 255, 255, .72);
-    outline-offset: 2px;
-  }
-
-  .nav-disabled { color: #fed3af; font-style: italic; cursor: not-allowed; }
-
-  @media (max-width: 1020px) {
-    :global(.sidebar-open) .sidebar { padding-right: 28px; padding-left: 28px; }
+  @media (max-width: 1080px) {
+    .site-header { grid-template-columns: minmax(220px, 1fr) auto; }
+    .header-meta { display: none; }
   }
 
   @media (max-width: 780px) {
-    .sidebar-toggle {
-      top: 14px;
-      left: 14px;
-      width: 58px;
-      height: 50px;
-      border-radius: 18px;
+    .site-header {
+      position: relative;
+      grid-template-columns: 1fr;
+      align-content: center;
+      gap: 8px;
+      padding: 14px 70px 12px var(--gutter);
     }
 
-    .sidebar {
-      top: 14px;
-      left: 14px;
-      width: 58px;
-      height: 50px;
-      border-radius: 18px;
-    }
-
-    :global(.sidebar-open) {
-      overflow: hidden;
-    }
-
-    :global(.sidebar-open) .sidebar {
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100dvh;
-      padding: 82px 26px 34px;
-      border-radius: 0;
-    }
-
-    .sidebar-close {
-      top: 22px;
-      left: 22px;
-    }
-
-    .sidebar-nav {
-      gap: 22px;
-      margin-top: clamp(72px, 18vh, 150px);
-      font-size: var(--fs-md);
-    }
-
-    .sidebar-brand {
-      align-self: center;
-    }
+    .identity { padding-right: 8px; }
+    .identity small { display: none; }
+    .site-nav { overflow-x: auto; scrollbar-width: none; }
+    .site-nav::-webkit-scrollbar { display: none; }
+    .site-nav a { flex: 0 0 auto; padding-right: 8px; padding-left: 8px; }
   }
 
-  @media (max-width: 600px) {
-    :global(.sidebar-open) .sidebar {
-      padding-right: 22px;
-      padding-left: 22px;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .section-indicator.is-ready { transition: none; }
+  @media (max-width: 420px) {
+    .site-header { padding-right: 64px; }
+    .identity strong { max-width: 210px; }
   }
 </style>

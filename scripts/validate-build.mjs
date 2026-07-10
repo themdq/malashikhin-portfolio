@@ -5,7 +5,7 @@ const dist = new URL('../dist/', import.meta.url);
 const pages = [
   {
     path: 'index.html',
-    text: ['Hi, It’s Dmitrii', 'Background', 'Experience', 'Master in Information Systems', 'Contacts', 'malashikh.in'],
+    text: ['Dmitrii', 'Malashikhin', 'Selected', 'filed by utility', 'Background', 'Experience', 'Master in Information Systems', 'Start a conversation', 'malashikh.in'],
   },
 ];
 
@@ -30,7 +30,7 @@ for (const asset of localAssets) {
   if (!existsSync(join(dist.pathname, asset))) throw new Error(`Missing local asset: ${asset}`);
 }
 
-for (const file of ['_headers', '_redirects', 'Dmitrii_Malashikhin_Data_Engineer_Resume.pdf']) {
+for (const file of ['_headers', '_redirects', 'Dmitrii_Malashikhin_Data_Engineer_Resume.pdf', 'og.png']) {
   if (!existsSync(new URL(file, dist))) throw new Error(`Missing deployment artifact: ${file}`);
 }
 
