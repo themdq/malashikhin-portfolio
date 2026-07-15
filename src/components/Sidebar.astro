@@ -22,6 +22,7 @@ const nav = [
         {item.label}
       </a>
     ))}
+    <a class="mobile-resume-link" href={site.resume} target="_blank">CV ↗</a>
   </nav>
 
   <div class="header-meta">
@@ -60,6 +61,7 @@ const nav = [
   .identity small { color: var(--muted); font: inherit; white-space: nowrap; }
 
   .site-nav { display: flex; align-items: center; gap: 2px; }
+  .mobile-resume-link { display: none !important; }
 
   .site-nav a, .resume-link {
     display: inline-flex;
@@ -115,22 +117,33 @@ const nav = [
 
   @media (max-width: 780px) {
     .site-header {
-      position: relative;
+      position: sticky;
       grid-template-columns: 1fr;
       align-content: center;
-      gap: 8px;
-      padding: 14px 70px 12px var(--gutter);
+      gap: 10px;
+      padding: 12px 66px 10px var(--gutter);
     }
 
-    .identity { padding-right: 8px; }
+    .identity { min-height: 28px; padding-right: 8px; }
     .identity small { display: none; }
-    .site-nav { overflow-x: auto; scrollbar-width: none; }
-    .site-nav::-webkit-scrollbar { display: none; }
-    .site-nav a { flex: 0 0 auto; padding-right: 8px; padding-left: 8px; }
+    .site-nav {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 4px;
+    }
+    .site-nav a, .mobile-resume-link {
+      display: inline-flex !important;
+      min-width: 0;
+      min-height: 36px;
+      justify-content: center;
+      padding: 4px 2px;
+      font-size: 10px;
+      white-space: nowrap;
+    }
   }
 
   @media (max-width: 420px) {
-    .site-header { padding-right: 64px; }
-    .identity strong { max-width: 210px; }
+    .site-header { padding-right: 62px; }
+    .identity strong { max-width: calc(100vw - 118px); }
   }
 </style>

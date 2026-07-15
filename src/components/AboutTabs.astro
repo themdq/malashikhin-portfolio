@@ -232,9 +232,32 @@ const tabs = [
 
   @media (max-width: 560px) {
     .tab-panel { min-height: 0; }
+    .tab-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      overflow: visible;
+    }
+    .tab-list button {
+      min-height: 52px;
+      justify-content: flex-start;
+      gap: 8px;
+      padding: 10px var(--gutter);
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+    }
+    .tab-list button:nth-child(2n) { border-right: 0; }
+    .tab-list button:last-child {
+      grid-column: 1 / -1;
+      border-right: 0;
+      border-bottom: 0;
+    }
     .experience-item { grid-template-columns: 32px 1fr; padding: 24px var(--gutter); }
     .experience-item time, .experience-item p { grid-column: 2; }
     .experience-item time { grid-row: 2; }
-    .prose-panel p { font-size: 24px; }
+    .prose-panel p { padding: 26px var(--gutter); font-size: 22px; line-height: 1.12; }
+    .education-panel article, .skills-panel article { grid-template-columns: 28px minmax(0, 1fr); gap: 14px; padding: 24px var(--gutter); }
+    .education-panel h3, .skills-panel h3 { font-size: 26px; line-height: 1.05; }
+    .interests-panel > span { min-height: 112px; padding: 18px; font-size: 22px; }
   }
 </style>
