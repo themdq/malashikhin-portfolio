@@ -2,6 +2,7 @@
   color-scheme: light;
   --page: #fffcf0;
   --surface: #f2f0e5;
+  --surface-raised: #fffcf0;
   --ink: #100f0f;
   --ink-soft: #282726;
   --muted: #6f6e69;
@@ -22,13 +23,14 @@
   --fs-title: clamp(30px, 3vw, 48px);
   --fs-display: clamp(82px, 10.2vw, 166px);
   --gutter: clamp(22px, 3.4vw, 56px);
-  --header-height: 76px;
+  --header-height: 72px;
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
   --page: #100f0f;
   --surface: #1c1b1a;
+  --surface-raised: #161514;
   --ink: #fffcf0;
   --ink-soft: #cecdc3;
   --muted: #878580;
@@ -44,7 +46,7 @@
 @media (max-width: 780px) {
   :root {
     --gutter: 20px;
-    --header-height: 104px;
+    --header-height: 62px;
   }
 }
 

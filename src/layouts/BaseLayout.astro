@@ -13,7 +13,7 @@ const {
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const socialImage = new URL('/og.png', Astro.site ?? Astro.url);
+const socialImage = new URL('/og-v2.png', Astro.site ?? Astro.url);
 const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
@@ -59,7 +59,7 @@ const personSchema = {
       (() => {
         document.documentElement.classList.add('js');
         const saved = localStorage.getItem('portfolio-theme');
-        const theme = saved || 'light';
+        const theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.dataset.theme = theme;
       })();
     </script>
@@ -80,9 +80,14 @@ const personSchema = {
           theme === 'dark' ? '#100f0f' : '#fffcf0',
         );
         if (themeLabel) themeLabel.textContent = theme === 'dark' ? 'Use light theme' : 'Use dark theme';
+        if (themeButton) {
+          const label = theme === 'dark' ? 'Use light theme' : 'Use dark theme';
+          themeButton.setAttribute('aria-label', label);
+          themeButton.setAttribute('aria-pressed', String(theme === 'dark'));
+        }
       };
 
-      syncTheme(root.dataset.theme || 'dark');
+      syncTheme(root.dataset.theme || 'light');
       themeButton?.addEventListener('click', () => {
         const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
         localStorage.setItem('portfolio-theme', next);

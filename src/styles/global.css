@@ -54,11 +54,18 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   transition: background-color 180ms ease, color 180ms ease;
+  text-wrap: pretty;
 }
 
 a { color: inherit; text-decoration: none; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { font: inherit; }
+
+main { isolation: isolate; }
+
+@media (hover: hover) {
+  a, button { cursor: pointer; }
+}
 
 :focus-visible {
   outline: 2px solid var(--blue);

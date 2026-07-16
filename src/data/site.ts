@@ -24,6 +24,7 @@ export const site = {
   role: 'Data Engineer',
   description:
     'Data Engineer building reliable ETL end-to-end, from source onboarding and normalization to enrichment, validation, and production support.',
+  philosophy: 'Source to production. Observable by default. Boring when it matters.',
   location: 'New York City',
   timezone: 'America/New_York',
   email: 'hello@malashikh.in',
@@ -65,14 +66,14 @@ export const experience: Experience[] = [
   {
     role: 'Data Engineer',
     company: 'R-Vision',
-    period: 'Oct 2023 - Jan 2026',
+    period: 'Oct 2023 — Jan 2026',
     summary:
       'Owned end-to-end vulnerability data feeds for a security scanner: source research, ETL pipelines, enrichment across vulnerability databases, validation, automation, CI/CD, and developer tooling.',
   },
   {
     role: 'Data Engineer',
     company: 'Datagile',
-    period: 'Aug 2022 - Oct 2023',
+    period: 'Aug 2022 — Oct 2023',
     summary:
       'Built SIEM normalization rules and Python connectors, documented integrations, supported production workflows, and automated routine engineering work.',
   },
@@ -86,16 +87,15 @@ export const capabilities: CapabilityGroup[] = [
 
 export const education = [
   {
-  degree: 'Master in Information Systems',
-  school: 'Admiral Makarov State University',
-  period: '2022 - 2024',
-},
-{
-  degree: 'Bachelor in Computer Science',
-  school: 'Admiral Makarov State University',
-  period: '2018 - 2022',
-}
-
+    degree: 'MS in Information Systems',
+    school: 'Admiral Makarov State University',
+    period: '2022 — 2024',
+  },
+  {
+    degree: 'BS in Computer Science',
+    school: 'Admiral Makarov State University',
+    period: '2018 — 2022',
+  },
 ] as const;
 
 export const interests = [

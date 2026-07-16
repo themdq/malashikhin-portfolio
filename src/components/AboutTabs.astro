@@ -30,12 +30,12 @@ const tabs = [
 
   <section class="tab-panel prose-panel" id="panel-background" role="tabpanel" aria-labelledby="tab-background" data-panel="background">
     <p>
-      I’m Dmitrii Malashikhin, a data and pipeline engineer based in {site.location}. I build data integrations
-      end-to-end, from researching sources and writing Python connectors to designing ETL pipelines and validation.
+      I’m a data and pipeline engineer based in {site.location}, building integrations end-to-end: researching sources,
+      writing Python connectors, and designing ETL, enrichment, and validation workflows.
     </p>
     <p>
       Most recently, I owned vulnerability data feeds for a cybersecurity product and improved the automation,
-      developer tooling, CI/CD, and data-quality workflows around them.
+      developer tooling, CI/CD, and data quality around them.
     </p>
     <p>
       I prefer pragmatic systems that are easy to understand, test, and keep reliable as requirements and inputs change.
@@ -144,8 +144,9 @@ const tabs = [
   .tab-list button:hover { background: var(--surface); }
   .tab-list button.is-active { background: var(--ink); color: var(--page); }
   .tab-list button.is-active span { color: var(--orange); }
+  .tab-list button:focus-visible { position: relative; z-index: 1; outline-offset: -4px; }
 
-  .tab-panel { min-height: 260px; }
+  .tab-panel { min-height: 260px; background: var(--surface-raised); }
   .tab-panel[hidden] { display: none; }
 
   .prose-panel {
@@ -162,6 +163,8 @@ const tabs = [
     font-size: clamp(22px, 2.1vw, 34px);
     line-height: 1.08;
   }
+
+  .prose-panel p:first-child { color: var(--ink); }
 
   .prose-panel p:last-child { border-right: 0; }
 
@@ -209,10 +212,12 @@ const tabs = [
     border-bottom: 1px solid var(--line);
     font-family: var(--serif);
     font-size: 25px;
+    transition: background-color 180ms ease, color 180ms ease;
   }
 
   .interests-panel > span:nth-child(5n) { border-right: 0; }
   .interests-panel b { color: var(--blue); font-family: var(--mono); font-size: var(--fs-xs); }
+  .interests-panel > span:hover { background: var(--surface); }
 
   @media (max-width: 900px) {
     .tab-list { display: flex; overflow-x: auto; scrollbar-width: none; }

@@ -16,15 +16,20 @@ const socials = [
     <main id="main">
       <section class="hero page-section" id="index" data-page-section="index">
         <div class="hero-name">
-          <p class="eyebrow">[01] Data Engineer / New York</p>
+          <p class="eyebrow"><span>[01]</span> Data Engineer / New York</p>
           <h1><span>Dmitrii</span><em>Malashikhin</em></h1>
         </div>
 
         <div class="hero-copy">
-          <p class="hero-index">R1 / 40.7128 N<br />74.0060 W</p>
+          <p class="hero-index">R1 / 40.7128° N<br />74.0060° W</p>
           <h2>Reliable systems for an <em>unreliable world.</em></h2>
           <p>{site.description}</p>
           <a class="text-link" href="#work">View selected work <span aria-hidden="true">↓</span></a>
+          <ul class="hero-proof" aria-label="Professional summary">
+            <li><strong>03+</strong><span>Years in data</span></li>
+            <li><strong>02</strong><span>Production roles</span></li>
+            <li><strong>NYC</strong><span>Based / EDT</span></li>
+          </ul>
         </div>
       </section>
 
@@ -44,17 +49,28 @@ const socials = [
             <span class="section-number">[02]</span>
             <h2>Selected<br />work</h2>
           </div>
-          <p>[03 records]<br />filed by utility</p>
+          <p>[03 case files]<br />shipped for utility</p>
         </header>
 
         <div class="project-list">
           {projects.map((project, index) => (
-            <a class="project-row" href={project.demo ?? project.href} target="_blank" rel="noreferrer">
+            <a
+              class="project-row"
+              href={project.demo ?? project.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Open ${project.title} ${project.demo ? 'live site' : 'source code'} in a new tab`}
+            >
               <span class="project-number">{String(index + 1).padStart(2, '0')}:</span>
-              <span class="project-title">{project.title}</span>
+              <span class="project-title-wrap">
+                <span class="project-title">{project.title}</span>
+                <span class="project-kind">{project.demo ? 'Live system' : 'Open source'}</span>
+              </span>
               <span class="project-meta">
-                {project.description}<br />
-                <b>{project.technologies.join(' / ')}</b>
+                <span>{project.description}</span>
+                <span class="project-stack">
+                  {project.technologies.map((technology) => <b>{technology}</b>)}
+                </span>
               </span>
               <span class="project-arrow" aria-hidden="true">↗</span>
             </a>
@@ -68,7 +84,10 @@ const socials = [
             <span class="section-number">[03]</span>
             <h2>Systems thinking,<br /><em>human scale.</em></h2>
           </div>
-          <p>I work from the source outward: understand the data, make the path observable, and keep production boring.</p>
+          <div class="about-note">
+            <span>Working principle / 01</span>
+            <p>{site.philosophy}</p>
+          </div>
         </header>
         <AboutTabs />
       </section>
@@ -82,6 +101,7 @@ const socials = [
         <div class="contact-main">
           <p class="contact-kicker">Start a conversation</p>
           <a class="contact-email" href={`mailto:${site.email}`}>{site.email}</a>
+          <p class="contact-note">For data platforms, pipeline reliability, and engineering work that needs a clear path from source to production.</p>
           <nav class="social-links" aria-label="Contact links">
             {socials.map((item, index) => (
               <a href={item.href} target={item.label === 'Email' ? undefined : '_blank'} rel={item.label === 'Email' ? undefined : 'noreferrer'}>
@@ -93,7 +113,7 @@ const socials = [
 
         <footer class="page-footer">
           <span>d@malashikh.in ~</span>
-          <span>© {new Date().getFullYear()} / built with Astro</span>
+          <span>© {new Date().getFullYear()} / built with Astro / <a href="#index">Back to top ↑</a></span>
         </footer>
       </section>
     </main>
@@ -104,6 +124,7 @@ const socials = [
   const sectionLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-section-link]'));
   const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-page-section]'));
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const scrollProgress = document.querySelector<HTMLElement>('[data-scroll-progress]');
 
   const setActiveSection = (id: string) => {
     sectionLinks.forEach((link) => {
@@ -128,6 +149,9 @@ const socials = [
     const activeSection = sections.reduce((active, section) => section.getBoundingClientRect().top <= activeLine ? section : active, sections[0]);
     const id = activeSection?.dataset.pageSection;
     if (id) setActiveSection(id);
+    const scrollable = document.documentElement.scrollHeight - innerHeight;
+    const progress = scrollable > 0 ? Math.min(scrollY / scrollable, 1) : 0;
+    if (scrollProgress) scrollProgress.style.transform = `scaleX(${progress})`;
   };
 
   const scheduleSectionUpdate = () => {
@@ -154,16 +178,38 @@ const socials = [
   .page-section { scroll-margin-top: var(--header-height); }
 
   .hero {
+    position: relative;
     display: grid;
     min-height: clamp(560px, calc(100svh - 170px), 760px);
     grid-template-columns: minmax(0, 1.55fr) minmax(340px, .75fr);
     gap: clamp(36px, 6vw, 100px);
     align-items: center;
     padding: 38px var(--gutter) 42px;
+    overflow: hidden;
     border-bottom: 1px solid var(--line-strong);
+    background:
+      linear-gradient(90deg, transparent 49.9%, color-mix(in srgb, var(--line) 38%, transparent) 50%, transparent 50.1%),
+      radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--blue) 11%, transparent), transparent 30%);
   }
 
-  .hero-name, .hero-copy { min-width: 0; }
+  .hero::before {
+    position: absolute;
+    right: var(--gutter);
+    bottom: 20px;
+    color: color-mix(in srgb, var(--muted) 70%, transparent);
+    content: 'ETL // OBSERVE // VALIDATE // SHIP';
+    font-size: 9px;
+    letter-spacing: .08em;
+    writing-mode: vertical-rl;
+  }
+
+  .hero-name, .hero-copy { position: relative; z-index: 1; min-width: 0; }
+  .hero-name { animation: hero-enter 650ms cubic-bezier(.2, .7, .2, 1) both; }
+  .hero-copy { animation: hero-enter 650ms 100ms cubic-bezier(.2, .7, .2, 1) both; }
+
+  @keyframes hero-enter {
+    from { opacity: 0; transform: translateY(18px); }
+  }
 
   .eyebrow, .section-number, .hero-index, .contact-kicker {
     font-size: var(--fs-xs);
@@ -179,6 +225,7 @@ const socials = [
     color: var(--orange-deep);
   }
 
+  .eyebrow span { color: var(--blue); }
   .eyebrow::after { width: 78px; height: 1px; background: var(--orange); content: ''; }
 
   .hero h1 {
@@ -225,6 +272,30 @@ const socials = [
   }
 
   .text-link span { color: var(--orange); }
+
+  .hero-proof {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 520px;
+    margin: clamp(34px, 6vh, 64px) 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+    list-style: none;
+  }
+
+  .hero-proof li {
+    display: grid;
+    min-width: 0;
+    gap: 2px;
+    padding: 14px 12px;
+    border-right: 1px solid var(--line);
+  }
+
+  .hero-proof li:first-child { padding-left: 0; }
+  .hero-proof li:last-child { border-right: 0; }
+  .hero-proof strong { color: var(--orange); font-size: 16px; font-weight: 600; }
+  .hero-proof span { color: var(--muted); font-size: 9px; text-transform: uppercase; }
 
   .status-ticker {
     display: flex;
@@ -282,12 +353,26 @@ const socials = [
   .project-row:last-child { border-bottom: 0; }
   .project-row:hover, .project-row:focus-visible { outline: 0; background: var(--orange); color: var(--on-orange); }
   .project-number { color: var(--blue); font-size: var(--fs-sm); font-weight: 600; }
+  .project-title-wrap { display: grid; min-width: 0; gap: 8px; }
   .project-title { font-family: var(--serif); font-size: clamp(32px, 3.4vw, 54px); line-height: .95; }
-  .project-meta { color: var(--muted); font-size: var(--fs-xs); text-transform: uppercase; }
-  .project-meta b { color: var(--ink-soft); font-weight: 400; }
+  .project-kind { width: fit-content; color: var(--orange-deep); font-size: 9px; letter-spacing: .04em; text-transform: uppercase; }
+  .project-kind::before { content: '[ '; }
+  .project-kind::after { content: ' ]'; }
+  .project-meta { display: grid; gap: 14px; color: var(--muted); font-size: var(--fs-xs); text-transform: uppercase; }
+  .project-stack { display: flex; flex-wrap: wrap; gap: 6px; }
+  .project-stack b {
+    padding: 4px 7px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink-soft);
+    font-size: 9px;
+    font-weight: 400;
+  }
   .project-row:hover .project-number, .project-row:focus-visible .project-number { color: #fffcf0; }
   .project-row:hover .project-meta, .project-row:hover .project-meta b,
   .project-row:focus-visible .project-meta, .project-row:focus-visible .project-meta b { color: var(--on-orange); }
+  .project-row:hover .project-stack b, .project-row:focus-visible .project-stack b { border-color: color-mix(in srgb, var(--on-orange) 55%, transparent); }
+  .project-row:hover .project-kind, .project-row:focus-visible .project-kind { color: var(--on-orange); }
 
   .project-arrow {
     display: grid;
@@ -314,7 +399,9 @@ const socials = [
 
   .about-heading h2 { margin: 20px 0 0; font-family: var(--serif); font-size: clamp(58px, 7vw, 104px); font-weight: 400; line-height: .84; }
   .about-heading h2 em { color: var(--blue); font-weight: 400; }
-  .about-heading > p { max-width: 510px; justify-self: end; margin: 0; color: var(--ink-soft); font-family: system-ui, sans-serif; font-size: 18px; }
+  .about-note { max-width: 510px; justify-self: end; }
+  .about-note span { display: block; margin-bottom: 14px; color: var(--orange-deep); font-size: var(--fs-xs); font-weight: 600; text-transform: uppercase; }
+  .about-note p { margin: 0; color: var(--ink-soft); font-family: var(--serif); font-size: clamp(24px, 2.3vw, 36px); line-height: 1.06; }
 
   .contacts-section { display: grid; grid-template-columns: minmax(250px, .32fr) minmax(0, 1fr); background: var(--orange); color: var(--on-orange); }
   .contact-label { padding: 44px var(--gutter); border-right: 1px solid currentColor; }
@@ -334,6 +421,13 @@ const socials = [
 
   .contact-email:hover { color: var(--ink); }
 
+  .contact-note {
+    max-width: 640px;
+    margin: 30px 0 0;
+    font-size: var(--fs-sm);
+    line-height: 1.65;
+  }
+
   .social-links {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -349,6 +443,7 @@ const socials = [
   .social-links a b { font-size: 18px; font-weight: 400; }
 
   .page-footer { display: flex; grid-column: 1 / -1; justify-content: space-between; gap: 20px; padding: 16px var(--gutter); border-top: 1px solid currentColor; font-size: var(--fs-xs); text-transform: uppercase; }
+  .page-footer a { border-bottom: 1px solid currentColor; }
 
   @media (max-width: 1050px) {
     .hero { grid-template-columns: 1fr; align-items: start; }
@@ -358,6 +453,7 @@ const socials = [
     .hero-copy h2 { margin: 0; }
     .hero-copy > p:not(.hero-index) { grid-column: 1; }
     .text-link { grid-column: 2; grid-row: 3; justify-self: end; align-self: end; }
+    .hero-proof { max-width: none; grid-column: 1 / -1; }
     .work-section { grid-template-columns: 220px minmax(0, 1fr); }
     .project-row { grid-template-columns: 50px minmax(190px, 1fr) 46px; }
     .project-meta { grid-column: 2; }
@@ -371,10 +467,12 @@ const socials = [
     .page-section { scroll-margin-top: var(--header-height); }
     .hero {
       min-height: calc(100svh - var(--header-height) - 38px);
-      gap: 46px;
+      gap: 40px;
       padding-top: 42px;
       padding-bottom: 54px;
+      background: radial-gradient(circle at 90% 8%, color-mix(in srgb, var(--blue) 10%, transparent), transparent 34%);
     }
+    .hero::before { display: none; }
     .eyebrow { gap: 10px; margin-bottom: 22px; font-size: 10px; white-space: nowrap; }
     .eyebrow::after { width: clamp(28px, 12vw, 48px); }
     .hero h1 { max-width: 100%; font-size: clamp(44px, 14.4vw, 64px); line-height: .82; letter-spacing: -.025em; }
@@ -384,6 +482,10 @@ const socials = [
     .hero-copy h2 { max-width: 100%; margin: 0; font-size: clamp(38px, 11.5vw, 50px); line-height: .96; }
     .hero-copy > p:not(.hero-index) { font-size: 15px; line-height: 1.6; }
     .text-link { grid-column: 1; grid-row: auto; justify-self: start; margin-top: 8px; }
+    .hero-proof { grid-column: 1; margin-top: 12px; }
+    .hero-proof li { padding: 12px 8px; }
+    .hero-proof li:first-child { padding-left: 0; }
+    .hero-proof strong { font-size: 14px; }
     .status-ticker { height: 38px; }
     .work-section { grid-template-columns: 1fr; }
     .section-rail { min-height: 170px; flex-direction: row; align-items: end; border-right: 0; border-bottom: 1px solid var(--line-strong); }
@@ -391,12 +493,13 @@ const socials = [
     .section-rail h2 { font-size: clamp(42px, 13vw, 56px); }
     .project-row { min-height: 0; grid-template-columns: 30px minmax(0, 1fr) 38px; gap: 12px; padding: 24px var(--gutter); }
     .project-title { font-size: clamp(28px, 8.5vw, 38px); line-height: 1; }
+    .project-kind { font-size: 8px; }
     .project-meta { grid-column: 2 / -1; line-height: 1.55; }
     .project-arrow { width: 36px; height: 36px; grid-column: 3; grid-row: 1; }
     .about-section { padding-top: 68px; }
     .about-heading { grid-template-columns: 1fr; gap: 28px; padding-bottom: 44px; }
     .about-heading h2 { font-size: clamp(38px, 11.5vw, 52px); line-height: .9; }
-    .about-heading > p { justify-self: start; }
+    .about-note { justify-self: start; }
     .contacts-section { grid-template-columns: 1fr; }
     .contact-label { display: flex; justify-content: space-between; gap: 20px; padding-top: 30px; padding-bottom: 30px; border-right: 0; border-bottom: 1px solid currentColor; }
     .contact-label p { margin: 0; text-align: right; }
@@ -413,6 +516,7 @@ const socials = [
     .hero { gap: 40px; padding-top: 36px; }
     .hero h1 { font-size: clamp(42px, 14vw, 49px); }
     .hero-copy h2 { font-size: 37px; }
+    .hero-proof span { font-size: 8px; }
     .contact-email { font-size: 28px; }
     .social-links { grid-template-columns: 1fr; }
     .social-links a { border-right: 0; }

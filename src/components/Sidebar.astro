@@ -13,6 +13,7 @@ const nav = [
   <a class="identity" href="#index" aria-label={`${site.name}, home`}>
     <span>&gt;_</span>
     <strong>Dmitrii Malashikhin</strong>
+    <b>DM</b>
     <small>/ Data Engineer</small>
   </a>
 
@@ -22,13 +23,14 @@ const nav = [
         {item.label}
       </a>
     ))}
-    <a class="mobile-resume-link" href={site.resume} target="_blank">CV ↗</a>
+    <a class="mobile-resume-link" href={site.resume} target="_blank" rel="noreferrer" aria-label="Open resume in a new tab">CV ↗</a>
   </nav>
 
   <div class="header-meta">
     <span class="availability">New York / EDT</span>
-    <a class="resume-link" href={site.resume} target="_blank">Resume ↗</a>
+    <a class="resume-link" href={site.resume} target="_blank" rel="noreferrer">Resume ↗</a>
   </div>
+  <span class="scroll-progress" data-scroll-progress aria-hidden="true"></span>
 </header>
 
 <style>
@@ -41,10 +43,11 @@ const nav = [
     grid-template-columns: minmax(260px, 1fr) auto minmax(260px, 1fr);
     align-items: center;
     gap: 24px;
-    padding: 10px 94px 10px var(--gutter);
+    padding: 10px 88px 10px var(--gutter);
     border-bottom: 1px solid var(--line-strong);
     background: color-mix(in srgb, var(--page) 92%, transparent);
     backdrop-filter: blur(14px);
+    box-shadow: 0 8px 30px color-mix(in srgb, var(--shadow) 48%, transparent);
   }
 
   .identity {
@@ -57,6 +60,7 @@ const nav = [
   }
 
   .identity span { color: var(--orange); font-size: 16px; }
+  .identity b { display: none; }
   .identity strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .identity small { color: var(--muted); font: inherit; white-space: nowrap; }
 
@@ -108,6 +112,19 @@ const nav = [
     border-radius: 50%;
     background: var(--orange);
     content: '';
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--orange) 16%, transparent);
+  }
+
+  .scroll-progress {
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    background: var(--orange);
+    transform: scaleX(0);
+    transform-origin: left;
+    will-change: transform;
   }
 
   @media (max-width: 1080px) {
@@ -118,23 +135,24 @@ const nav = [
   @media (max-width: 780px) {
     .site-header {
       position: sticky;
-      grid-template-columns: 1fr;
-      align-content: center;
-      gap: 10px;
-      padding: 12px 66px 10px var(--gutter);
+      grid-template-columns: auto minmax(0, 1fr);
+      min-height: var(--header-height);
+      gap: 12px;
+      padding: 9px 62px 9px var(--gutter);
     }
 
-    .identity { min-height: 28px; padding-right: 8px; }
-    .identity small { display: none; }
+    .identity { gap: 6px; }
+    .identity strong, .identity small { display: none; }
+    .identity b { display: block; font-size: 11px; }
     .site-nav {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 4px;
+      gap: 2px;
     }
     .site-nav a, .mobile-resume-link {
       display: inline-flex !important;
       min-width: 0;
-      min-height: 36px;
+      min-height: 38px;
       justify-content: center;
       padding: 4px 2px;
       font-size: 10px;
@@ -143,7 +161,7 @@ const nav = [
   }
 
   @media (max-width: 420px) {
-    .site-header { padding-right: 62px; }
-    .identity strong { max-width: calc(100vw - 118px); }
+    .site-header { gap: 6px; padding-right: 56px; padding-left: 14px; }
+    .site-nav a, .mobile-resume-link { font-size: 9px; }
   }
 </style>

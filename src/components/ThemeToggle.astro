@@ -1,6 +1,6 @@
 <div class="theme-control">
-  <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" title="Toggle color theme">
-    <span aria-hidden="true">◐</span>
+  <button class="theme-toggle" type="button" data-theme-toggle aria-label="Use dark theme" aria-pressed="false" title="Switch color theme">
+    <span aria-hidden="true">◒</span>
     <span class="sr-only" data-theme-label>Use dark theme</span>
   </button>
 </div>
@@ -20,22 +20,24 @@
     place-items: center;
     padding: 0;
     border: 1px solid var(--ink);
-    border-radius: 4px;
-    background: var(--page);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--page) 90%, transparent);
     color: var(--ink);
     cursor: pointer;
+    box-shadow: 0 6px 18px var(--shadow);
+    backdrop-filter: blur(12px);
     transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
   }
 
   .theme-toggle:hover {
     background: var(--blue);
     color: #fffcf0;
-    transform: translateY(-2px);
+    transform: rotate(12deg) translateY(-2px);
   }
 
   .theme-toggle span[aria-hidden] { font-size: 21px; line-height: 1; }
 
   @media (max-width: 780px) {
-    .theme-control { top: 18px; right: 18px; }
+    .theme-control { top: 13px; right: 14px; }
   }
 </style>
