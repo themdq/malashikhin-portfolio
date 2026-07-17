@@ -35,43 +35,43 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-  min-width: 320px;
-  overflow-x: clip;
+  overflow-x: hidden;
+  scrollbar-width: none;
   scroll-behavior: smooth;
   background: var(--page);
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  overflow-x: clip;
-  border-top: 6px solid var(--orange);
-  background: var(--page);
+  overflow-x: hidden;
+  scrollbar-width: none;
+  background:
+    radial-gradient(circle at 14% 52%, color-mix(in srgb, var(--orange) 7%, transparent), transparent 28%),
+    var(--page);
   color: var(--ink);
   font-family: var(--mono);
   font-size: var(--fs-base);
-  line-height: 1.5;
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
   transition: background-color 180ms ease, color 180ms ease;
-  text-wrap: pretty;
 }
+
+.page-shell { position: relative; isolation: isolate; }
 
 a { color: inherit; text-decoration: none; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { font: inherit; }
 
-main { isolation: isolate; }
-
-@media (hover: hover) {
-  a, button { cursor: pointer; }
-}
-
-:focus-visible {
-  outline: 2px solid var(--blue);
-  outline-offset: 4px;
-}
-
+:focus-visible { outline: 2px solid var(--orange); outline-offset: 4px; }
 ::selection { background: var(--orange); color: var(--on-orange); }
 
 .skip-link, .sr-only {
@@ -88,22 +88,16 @@ main { isolation: isolate; }
 .skip-link:focus {
   top: 12px;
   left: 12px;
-  z-index: 2000;
+  z-index: 100;
   width: auto;
   height: auto;
   padding: 10px 14px;
   clip: auto;
-  border: 1px solid var(--ink);
-  border-radius: 4px;
-  background: var(--page);
-  color: var(--ink);
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--page);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    scroll-behavior: auto !important;
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .01ms !important;
-  }
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }

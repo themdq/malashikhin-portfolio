@@ -5,7 +5,7 @@ const dist = new URL('../dist/', import.meta.url);
 const pages = [
   {
     path: 'index.html',
-    text: ['Dmitrii', 'Malashikhin', 'Selected', 'shipped for utility', 'Background', 'Experience', 'MS in Information Systems', 'Start a conversation', 'malashikh.in'],
+    text: ['Hi, It’s Dmitrii', 'Background', 'Experience', 'MS in Information Systems', 'Contacts', 'malashikh.in'],
   },
 ];
 

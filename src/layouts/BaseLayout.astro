@@ -59,7 +59,7 @@ const personSchema = {
       (() => {
         document.documentElement.classList.add('js');
         const saved = localStorage.getItem('portfolio-theme');
-        const theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const theme = saved || 'light';
         document.documentElement.dataset.theme = theme;
       })();
     </script>
